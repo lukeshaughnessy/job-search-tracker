@@ -1,0 +1,511 @@
+# Build a Job Search Tracker: a beginner’s guide to vibe coding
+
+## What this document is
+
+This is a complete project brief and a teaching plan. It contains no application code or terminal commands. You can attach it to a chatbot, or paste its contents into a new conversation, and ask the chatbot to guide you through building the application.
+
+You do not need to know web development, understand artificial intelligence, or have used a terminal before. The aim is to learn enough to direct the work, recognize whether it succeeds, and look after the application afterward.
+
+This document specifies the finished behavior and design. It does not contain the original implementation or promise that a newly generated version will have identical internal code. A chatbot should use this specification to create a working version on your computer and verify it with you.
+
+The application is a personal job-search workspace for senior engineering managers. It keeps opportunities, people, conversations, interview progress, notes, and follow-ups together. It runs on your own Mac, Linux, or Windows computer. You use it through your usual browser, but it is not a publicly hosted website.
+
+## How to begin
+
+1. Open a chatbot that can help with programming. Use one you already have access to if possible. You do not need to buy several tools to begin.
+2. Start a new conversation and attach this document. If file attachment is unavailable, paste the document in sections and tell the chatbot to wait until you have supplied all sections.
+3. Send this message:
+
+> I am new to AI and web development. Use the attached document as both your teaching plan and the complete specification for my application. Help me set up my computer and learn vibe coding by building this app. Start by asking which operating system I use, what tools I already have, and whether you can edit files on my computer. Give me one manageable step at a time, explain why it matters, and tell me how to recognize success. Do not assume I know how to use a terminal. Follow the final requirements in this document, including no branding, no sample data by default, Ocean and Forest color themes, and daily quotes from 10 different authors. Do not start generating the whole application before we have a plan.
+
+4. Answer the chatbot’s initial questions. If you do not know an answer, say so. Helping you find that information is part of its job.
+5. Work through one milestone at a time. Keep this document available when the conversation changes or you switch tools.
+
+## Instructions for the chatbot acting as a tutor
+
+Treat the learner as the product owner, not as someone who needs to memorize programming syntax. Explain technical terms when they first appear. Give directions appropriate to their operating system and the tools they actually have.
+
+At the beginning, ask only the questions needed for the next step:
+
+- Are they using Mac, Windows, or Linux? Which version, and for Linux, which distribution?
+- Do they already have a code editor or an AI coding assistant?
+- Is the current chatbot a conversation-only tool, or can it read and change files and run commands in their project folder?
+- Is this a personal computer, or a managed computer where installations may be restricted?
+
+Do not assume the chatbot can access their computer. Clearly distinguish an action the learner must perform from an action the assistant has actually performed. If a tool is paid, explain that before directing the learner to sign up. Prefer their existing tools when suitable.
+
+For each teaching step, provide:
+
+1. A plain-language explanation of the goal.
+2. The exact clicks or commands for their machine, only when needed.
+3. Where the action happens: browser, editor, file manager, or terminal.
+4. What success should look like.
+5. What information to send back if something goes wrong.
+
+Wait for the learner’s result when the next step depends on it. Do not make them repeatedly approve routine file edits they have already asked you to make. Explain installation requests and actions that could replace existing files or data before proceeding.
+
+Before coding, inspect the chosen folder, make a short plan, and explain where the information will be stored. Build working milestones. Do not finish with a mockup, a collection of disconnected screens, or a claim that something works without checking it.
+
+Use the learner’s browser observations as evidence. If you cannot run a browser, say so and give them a short visual check to perform. If you cannot access the internet or start a local server, identify the restriction and provide the next action for their own terminal. Do not call an environment failure a successful startup.
+
+Keep a short progress record covering the operating system, project location, completed milestones, open problems, and next step. Do not place real contacts, application notes, or credentials in this record.
+
+## Learning vibe coding
+
+“Vibe coding” means describing what you want in everyday language and working with an AI assistant to turn it into software. The useful skill is giving clear directions and checking the results. The assistant writes much of the code; you decide what the app should do and whether it actually does it.
+
+The basic cycle is:
+
+**Describe → ask for a plan → build a small part → try it → give specific feedback → keep a working checkpoint.**
+
+You do not need to understand every generated line to start. You should gradually learn which files control appearance, which handle saved information, how to start and stop the app, and how to recover a working version.
+
+### A few concepts in ordinary language
+
+| Term | What it means here |
+| --- | --- |
+| AI assistant or chatbot | A tool that interprets your request and suggests or makes changes. It can make mistakes, so results need checking. |
+| Prompt | Your instructions to the assistant. A useful prompt states the problem, the desired result, and what must stay the same. |
+| Project folder | The folder holding the application’s files. Keep it in a location you can find again. |
+| Code editor | An application for viewing and changing project files. Visual Studio Code is one option. |
+| Terminal | A window where you type instructions to start tools and see their messages. It is separate from the browser address bar. |
+| Frontend | The part you see and interact with in the browser. |
+| Backend | The local process that saves and retrieves information. |
+| Database | The organized store of your applications, contacts, follow-ups, and history. |
+| Dependency | A reusable software component the app needs. An installer downloads these components. |
+| Development mode | A way of running the app that updates the browser quickly while you change it. |
+| Build | Preparing the interface files for ordinary use. |
+| Localhost | Your own computer. An address beginning with 127.0.0.1 connects back to it. |
+| Port | A numbered doorway to a running service. The frontend and backend may use different numbers. |
+| Version control | A record of changes to the application’s files, commonly made with Git. |
+| Checkpoint or commit | A named working version you can return to. It is not a backup of your job-search database. |
+| Test | A repeatable check of a specific behavior. Passing a test does not replace looking at the actual app. |
+| Debugging | Finding why something failed and correcting the cause. |
+
+### How to ask for useful changes
+
+Say what you observe, what you want, and what should be preserved.
+
+> The application table is difficult to read on my laptop. Increase the role and company text sizes and improve spacing. Keep the existing filters and row actions. Check that it still works on a narrow screen.
+
+> When I add an application with today’s application date, I expect a follow-up seven days later. That follow-up is not appearing. Inspect the save operation and database records, fix the cause, and show me how to verify it.
+
+> Save the current green colors as Forest. Add a pleasant blue palette named Ocean, make it the default, and let me switch between them. Keep both light and dark modes.
+
+Avoid adding several unrelated features while a bug is unresolved. If the assistant proposes a large rewrite for a small problem, ask why it is necessary and whether a focused change would solve it.
+
+### How to report a problem
+
+Tell the assistant which page you were on, what you clicked, what you expected, and what happened. Include the relevant error text or a screenshot when useful. If sharing a screenshot, hide real personal information you do not want sent to the chatbot.
+
+> I clicked Save application on the add form. I expected the new job to appear in Applications. Instead, the form stayed open and displayed this error. Here is the error text and the terminal output from that moment.
+
+If you only say “it is broken,” the assistant must guess. If you provide the sequence, it can investigate the actual behavior.
+
+### How to keep control of the project
+
+Ask the assistant to summarize what changed and why. Save a working checkpoint after each milestone. Before a change to the database’s structure, make a database backup. After a failed change, prefer recovering the last working version to stacking unrelated fixes on top of it.
+
+A new conversation can begin with this prompt:
+
+> Continue this project from its actual files and the progress record. Inspect what exists before editing anything. Summarize what already works, what remains incomplete, and the next small milestone. Preserve my saved data.
+
+## Computer setup: one operating system at a time
+
+The tutor should guide only the path for the learner’s computer, rather than asking them to work through all three systems.
+
+The usual tools are a browser, a code editor, Node.js with npm, and optionally Git for local checkpoints. No separate SQLite server, Docker installation, cloud account, or domain name is required. SQLite is supplied through the application’s database library.
+
+Node.js runs the local application tools. npm installs their dependencies. The tutor must check the current official installation guidance and choose a supported Node.js release compatible with the selected Vite and SQLite library versions. “The newest version” is not sufficient if the project’s dependencies do not support it. LTS means long-term support; explain why that is a sensible starting point.
+
+Official references appear at the end of this document. Use official downloads and current instructions instead of inventing installer names or assuming old version numbers are still supported.
+
+### Mac
+
+Guide the learner through identifying their macOS version and whether the computer uses Apple Silicon or Intel. Help them install a suitable editor and compatible Node.js distribution. Show them how to open Terminal, or the editor’s built-in terminal, and how to open their project folder.
+
+Explain that some developer components may need Apple’s command-line build tools. Check whether they are actually needed before adding them. If the SQLite library cannot install its prebuilt component and must compile locally, follow its official troubleshooting guidance and the platform build-tool instructions.
+
+If a newly installed command is not recognized, have the learner close and reopen the terminal before changing system settings. Use their real folder path, including proper handling of spaces.
+
+### Windows
+
+Guide the learner through identifying their Windows version and processor type. Begin with native Windows tooling unless there is a specific reason to introduce Linux inside Windows. Do not make WSL, Docker, or a second operating system a beginner prerequisite.
+
+Help them install a suitable editor and compatible Node.js distribution. Explain how to open PowerShell or the editor’s terminal and which one the current directions expect. Commands and environment-variable instructions must match that choice.
+
+After installation, reopen the terminal and verify that the tools are available. If PowerShell blocks an npm script, explain the specific issue and first consider an appropriate terminal or command variant; do not default to changing computer-wide execution policy.
+
+If the SQLite component requires compilation, follow official guidance for Python and Microsoft’s C++ build tools. Do not tell the learner to install a large toolchain unless the error requires it.
+
+### Linux
+
+Ask which distribution the learner uses. Ubuntu, Debian, Fedora, and other distributions may use different package managers. Give instructions for the actual distribution.
+
+Help them install a suitable editor and a supported, compatible Node.js version. Distribution repositories can contain older versions; verify the result rather than assuming installation means compatibility. If a version manager is used, explain what it does and why.
+
+Show them how to open a terminal and their project folder. If the SQLite component requires compilation, consult official instructions for Python, make, and the appropriate C++ compiler tools.
+
+### A setup milestone is complete when
+
+The learner can open their editor, identify the project folder, open a terminal in that folder, and verify that Node.js and npm work. They can explain the difference between the terminal and browser. They know whether the assistant can edit files directly or will provide instructions for them to follow.
+
+The tutor should then create a short project README with the actual installation, start, stop, restart, and verification instructions for that build. This guide intentionally leaves commands to the tutor so they can match the learner’s machine and the generated project.
+
+## The application to build
+
+### Purpose and boundaries
+
+Build a polished local personal CRM for a senior engineering management job search. CRM means keeping track of relationships and opportunities, rather than merely listing rows of data.
+
+It is a single-user app without a login. Information is stored persistently in a local SQLite database. The app should run on Mac, Linux, and Windows with straightforward startup instructions.
+
+The final product starts empty. It must not automatically create sample applications, fictional contacts, or demo activities. Optional demo data may exist for testing only in a separate, explicitly chosen database.
+
+Use the working name Job Search Tracker in documentation. Do not display a product logo, app-name branding, marketing slogans, or a branded footer in the interface. The browser tab can say “My workspace.” Replace promotional content with the daily optimism quote specified below.
+
+### Technology choices
+
+Use React and TypeScript for the interface, Vite for frontend development and builds, Tailwind CSS for styling, Lucide for icons, and SQLite for persistent storage. Use a small Node.js/Express backend to access SQLite safely from the browser interface.
+
+Explain these tools as they become relevant, rather than requiring the learner to study all of them first. Keep dependencies reasonable. Avoid a complex framework, remote database, authentication service, or cloud deployment unless the learner later asks for those things.
+
+Keep interface components, pages, shared data types, date utilities, database access, and application services separate. The tutor should explain where to find each part using the actual files it creates.
+
+### Overall layout and interaction
+
+Provide a left sidebar with Dashboard, Applications, Contacts, Follow-ups, and Analytics. Keep the “Add Application” button prominent. Use cards, subtle borders, generous spacing, readable type, helpful status badges, and a responsive layout.
+
+Use light mode initially. Support dark mode with a clearly labeled control. On narrow screens, navigation can collapse behind a menu button. Do not squeeze every desktop table column into unreadably small text; allow sensible horizontal scrolling or a suitable mobile presentation.
+
+Provide useful empty states with clear next actions. Show loading, saving, and error states. A failed save must not appear successful. Keep entered form information available so the learner can correct an error without starting again.
+
+Forms and dialogs must support keyboard use, visible focus, clear labels, Escape to close where appropriate, and focus returning to the previous control. Color must not be the only way to recognize a stage or overdue action.
+
+### Colors: Forest and Ocean
+
+Preserve a green palette named **Forest** and create a pleasant blue palette named **Ocean**. Ocean is the default for a new user. The sidebar has a simple “Color theme” selector with both names. Remember the choice after refreshing or restarting the browser.
+
+Forest uses green accents, a pale green-gray canvas, white cards, and muted sage details. Reference colors are primary green #28654F, deeper hover green #174D38, main text #273732, canvas #F6F8F7, and border #DDE6DF.
+
+Ocean uses clear blue accents, a pale cool canvas, white cards, and subdued blue-gray details. Reference colors are primary blue #286DA8, deeper hover blue #205987, link/accent blue #266A9E, canvas #F4F8FC, selected navigation #E9F3FC, and quote panel #EDF5FB.
+
+Both palettes support light and dark mode. Use coordinated colors across navigation, buttons, links, quote panels, form focus, charts, and pipeline accents. Keep semantic states understandable: overdue/rejection warnings remain warm-toned, and offers or success can retain green. Check contrast in both dark palettes, including the selected theme control.
+
+### Daily optimism quote
+
+Show a calm, attractive quote panel in the main workspace on every page. Label it “A little hope for today.” Display the quote, author, and linked original work. Do not add a logo or promotional illustration to the panel.
+
+Rotate among 10 different authors, one quote per local calendar day. Keep the same quote throughout a day and across refreshes. Change it on the next day, including when the tab remains open. With 10 entries, repeat the rotation after 10 days. Daylight-saving changes must not cause an extra or missed calendar-day change.
+
+Store quotes with the app so they display without an internet connection. Internet is needed only if the user chooses to open a source link. Preserve line breaks for poetry. Do not attribute newly written AI reflections to historical people.
+
+Use the following source-grounded selection. Each author gets one entry:
+
+| Author | Quote | Linked work |
+| --- | --- | --- |
+| Helen Keller | Optimism is the faith that leads to achievement; nothing can be done without hope. | [Optimism](https://www.gutenberg.org/files/31622/31622-h/31622-h.htm) |
+| Ralph Waldo Emerson | Nothing great was ever achieved without enthusiasm. | [Circles, Essays: First Series](https://www.gutenberg.org/cache/epub/2944/pg2944-images.html) |
+| Louisa May Alcott | I’m not afraid of storms, for I’m learning how to sail my ship. | [Little Women, Chapter 44](https://www.gutenberg.org/files/514/514-h/514-h.htm) |
+| Henry David Thoreau | Only that day dawns to which we are awake. There is more day to dawn. | [Walden, Conclusion](https://www.gutenberg.org/files/205/205-h/205-h.htm) |
+| Emily Dickinson | Hope is the thing with feathers / That perches in the soul, | [Hope is the thing with feathers](https://poets.org/poem/hope-thing-feathers-254) |
+| William Shakespeare | Our doubts are traitors / And makes us lose the good we oft might win / By fearing to attempt. | [Measure for Measure, Act 1, Scene 4, Folger edition](https://www.folger.edu/explore/shakespeares-works/measure-for-measure/read/1/4/) |
+| Percy Bysshe Shelley | If Winter comes, can Spring be far behind? | [Ode to the West Wind](https://www.poetryfoundation.org/poems/45134/ode-to-the-west-wind) |
+| Charles Dickens | However, the Sun himself is weak when he first rises, and gathers strength and courage as the day gets on. | [The Old Curiosity Shop, Chapter 40](https://www.gutenberg.org/files/700/700-h/700-h.htm) |
+| Henry Wadsworth Longfellow | Let us, then, be up and doing, / With a heart for any fate; | [A Psalm of Life](https://poets.org/poem/psalm-life) |
+| William James | Be not afraid of life. Believe that life is worth living, and your belief will help create the fact. | [Is Life Worth Living?, The Will to Believe](https://www.gutenberg.org/files/26659/26659-h/26659-h.htm) |
+
+Slashes in the poetry entries indicate line breaks, not text to display. The Shakespeare wording follows the linked Folger edition. Fictional dialogue is attributed to the author and identified by its work; it is not presented as a recorded personal statement.
+
+## Information the app must remember
+
+### Applications and opportunities
+
+Each opportunity has an automatically assigned identifier and these fields:
+
+- Company and job title, both required.
+- Original job description URL, optional but validated when provided.
+- Location and work arrangement: Remote, Hybrid, or On-site.
+- Compensation range, stored as readable text so currencies and total-compensation details are possible.
+- Date found and optional date applied.
+- Source: LinkedIn, Company website, Recruiter, Referral, Networking, or Other.
+- Referral/contact source, as free text.
+- Complete saved job description, separate from notes.
+- Large free-text notes for interviews, research, and networking.
+- Fit rating and interest rating, each a whole number from 1 to 5.
+- Optional priority: High, Medium, or Low.
+- Current pipeline stage and creation information.
+
+Fit means how well the requirements match the user’s experience. Interest means how much they want the opportunity. These must be separate so a high-fit role can still have low interest, or the reverse.
+
+When adding an application, warn if the same company and job title already exist, ignoring capitalization and surrounding spaces. Allow an explicit override for a genuinely separate opening. Never silently create duplicates.
+
+Changing a stage, editing notes, or saving a job description must persist. URLs open in a new tab. Reject invalid URL schemes rather than making an unsafe or broken link.
+
+### Pipeline stages and computed state
+
+Use the stages in this order:
+
+1. Interested
+2. Applied
+3. Contacted
+4. Recruiter Screen
+5. Hiring Manager
+6. Technical Interview
+7. Panel / Onsite
+8. Final Interview
+9. Offer
+10. Rejected
+11. Withdrawn
+
+Compute the simple state from the current stage. Rejected means Rejected, Offer means Offer, Withdrawn means Closed, and all other stages mean Active. Do not require the user to maintain a second independent state that can contradict the stage.
+
+An Interested opportunity is active, but it does not count as an active *application* until it has an applied date. Offers are shown separately from active applications.
+
+Retain the history and date of each stage change, even when an opportunity is later rejected or withdrawn. Do not erase earlier interview progress when the current stage changes.
+
+### Contacts and associations
+
+An opportunity may have multiple contacts. A person may be associated with multiple opportunities. The separate Contacts page must let the user see those associated jobs and interactions together.
+
+Store name, title, company, email, LinkedIn URL, relationship, first contacted date, last contacted date, and notes. Name and at least one opportunity association are required for the initial version.
+
+Relationship choices are Recruiter, Hiring Manager, Referral, Employee, Executive, and Other. Email and LinkedIn are optional; validate their format when entered. Provide clickable email and LinkedIn links.
+
+A straightforward implementation may keep opportunity-specific contact records and group them by matching email, as the existing app does. A normalized contact-to-opportunity association is also acceptable. Explain the chosen behavior so the learner knows how to associate an existing person with another opportunity. Avoid merging people merely because their names match.
+
+### Follow-ups
+
+Store a separate record for every follow-up. Include its associated job, optional contact, due date, completed state, type, notes, and next action. The next action is the short description of what the user intends to do.
+
+Follow-up types can include Application, Outreach, Interview, Thank you, and Other. Allow more than one follow-up per opportunity or contact. Adding another must not overwrite an earlier action.
+
+When an application date is entered for the first time, add a follow-up seven calendar days after that date. If an undated opportunity changes to Applied, set its application date to today and add the seven-day follow-up. Do not add duplicate automatic actions when the same record is saved again without new application or outreach information.
+
+Recording a new outreach/last-contacted date creates an outreach activity and a follow-up seven days after that contact date. When first contact is the only date entered for a new person, use it as the initial last-contacted date too. A manually added follow-up defaults to seven days from today and allows the date to be changed.
+
+Completing a follow-up requires one click. After completion, offer to add another follow-up seven days from today. Declining that offer leaves the original completed. Choosing it creates a new record. Prevent repeated clicks from creating duplicate completions or successor actions.
+
+Completion records the user’s action; it does not send email, contact a recruiter, or schedule a meeting by itself.
+
+### Activity history and dates
+
+Record application creation, stage changes, contact additions/edits, outreach dates, follow-up creation/completion, and saved note/description changes in an application’s timeline. Include readable activity text, date/time, and relevant contact. Allow manual entries with an optional associated contact.
+
+Display newest activities first. Keep meaningful stage timestamps for analytics. If a historical application date is supplied, retain that date separately from the current stage’s timestamp; do not invent past dates for interviews.
+
+Use local calendar dates for application dates, due dates, and “today.” Automatically calculate days since application, days since last contact, days until a follow-up, and whether an incomplete action is overdue. Show a dash for missing dates rather than a misleading zero. Do not count completed actions as overdue.
+
+## Page-by-page specification
+
+### Dashboard
+
+Show summary cards for active applications, applications this week, interviews in progress, follow-ups due, overdue follow-ups, offers, and rejections. Make the important totals easy to scan without using tiny type. Smaller secondary cards are acceptable if all seven measures remain visible.
+
+“This week” starts Monday and runs through today. Interviews in progress includes Recruiter Screen through Final Interview. Follow-ups due includes today and overdue actions. Count actions, rather than distinct jobs, in follow-up totals.
+
+Display a clickable pipeline with counts for Interested, Applied, Recruiter Screen, Hiring Manager, Technical, Panel, Final, and Offer. Clicking a stage opens the application list filtered to it. Contacted remains available in the full stage filter and may appear as an additional pipeline link.
+
+Provide “Follow-ups & Next Actions,” ordered by overdue first, today second, then future dates. Each item shows company, job, optional contact, next action, due date, and completion control. Overdue items must be prominent and text-labeled. Clicking the opportunity opens its detail workspace.
+
+An optional highest-fit opportunities card may highlight promising active jobs using fit and interest. It must use the user’s data and have an appropriate empty state.
+
+### Applications
+
+Provide a clean table containing company, title, location/work arrangement, date applied, stage, fit, interest, primary contact, next incomplete follow-up, days since application, and source.
+
+Use the first associated contact consistently as the primary contact in this initial version. Show an empty value if none exists. The next follow-up is the earliest incomplete action for the job.
+
+Allow sorting by the displayed columns, with ascending/descending direction visible. Provide search across company, title, associated contacts, application notes, and contact notes.
+
+Filters include active only, stage, company, location, source, fit rating, application date range, and follow-up due. Different filters work together. Date filtering applies to application dates, not found dates. Provide a reset action and a matching-results count. A job without an applied date should not satisfy an application date range.
+
+Clicking an opportunity opens its detail page. Provide quick actions to change stage, add contact, add follow-up, mark rejected, and add/edit notes without navigating through several pages. Changing a stage from the table must also update the timeline and dashboard totals.
+
+### Application detail
+
+This is the central workspace for one opportunity. At the top, show company and job title, computed state, current stage, date applied, days since application, fit, interest, location/work arrangement, compensation, and job URL. Provide obvious buttons to edit the application and open the original posting.
+
+Below, provide Contacts, Activity Timeline, Follow-ups, Notes, and Job Description. Contacts support adding/editing people. Follow-ups show both incomplete and completed actions and include an Add Follow-up button. The timeline supports manual entries.
+
+Use generous notes and job-description fields with explicit save buttons and feedback. Saving one must not silently discard unsaved edits to the other. Warn before navigating away from meaningful unsaved edits where practical. Persist the complete pasted description even if the posting later disappears.
+
+### Contacts
+
+Show name, title, company, email, LinkedIn, relationship, associated jobs, last contacted date, and next follow-up. Provide contact search and an add-contact action.
+
+Clicking a contact opens a detail panel or page showing their associated opportunities, contact-linked history, and follow-ups. Allow editing the contact. Last-contacted calculations must handle missing dates clearly. Changing a contact’s details updates the displayed information after saving.
+
+### Follow-ups
+
+Create a dedicated queue with Overdue, Today, Next 7 Days, and Later sections. Include only incomplete actions in those sections. Today does not overlap Next 7 Days; the latter includes tomorrow through seven days from today, inclusive. Later begins after that interval.
+
+Sort each section by due date. Show company, job, optional contact, next action, and due date. Support one-click completion and the optional successor seven days later. Provide access to completed actions separately and an Add Follow-up button.
+
+### Analytics
+
+Show applications submitted, applications per week, response rate, recruiter screen rate, interview rate, offer rate, and rejection rate. Show weekly submission activity for the last eight weeks.
+
+Use applications with an applied date as the denominator for overall rates. A response means the application has reached Contacted or a recruiter/interview/offer milestone in current stage or recorded history. Rejection by itself does not establish that a human responded. Interview rate begins at Hiring Manager. Offer rate means the opportunity reached Offer; rejection rate reflects the current Rejected stage. Explain these definitions near the analytics or in help text.
+
+Show the funnel: Applied → Recruiter Screen → Hiring Manager → Technical/Panel → Final → Offer. Count unique opportunities that reached each milestone, including historical progression after later rejection or withdrawal. A later milestone implies earlier progression for funnel counts, but does not create invented timestamps for those earlier stages.
+
+Show both counts and understandable conversion percentages. Handle zero denominators without invalid values. Show average time between stages only when at least two applications have recorded, chronological dates for both stages; otherwise say there is not enough data.
+
+Compare sources by submission volume, response rate, and interview rate. Each source uses its own submitted applications as its denominator. Put stronger response sources first or make sorting easy. Small samples should remain visible so a high percentage from one application is not mistaken for a large trend.
+
+## Saving, exporting, and running the app
+
+### Persistence and structure
+
+Use SQLite for all application records. Browser storage is suitable for palette and dark-mode preferences, but not the job-search database. The database should live in a clearly named data folder and survive stopping, restarting, and rebuilding the app.
+
+Keep a simple database layer and application-service layer. Related changes, such as saving an application and adding its automatic follow-up/history, should succeed together or leave the database unchanged. Validate input on the server as well as in forms. Do not allow orphaned contacts, actions, or activity records.
+
+If future changes require a database migration, document it, preserve existing data, and test it on a backup first. Do not solve a schema problem by deleting the learner’s database.
+
+### Exports and backups
+
+Provide an Export menu for applications CSV, all-data JSON, and a complete SQLite backup.
+
+CSV uses one row per application. Include associated contacts, follow-ups, and history as clearly documented structured fields when exporting the whole application record. Properly handle commas, quotes, and multiline notes. JSON preserves all four types of records and their associations.
+
+A SQLite backup is a consistent snapshot of the complete database, including information still held in SQLite’s working files. Do not offer a raw copy of an actively written database as if it were a verified backup.
+
+Teach the learner how to download a backup, name it with a date, and keep it outside the project folder. Include a restoration walkthrough: stop the app, preserve the current database, restore the chosen snapshot to the documented location, deal with stale SQLite sidecar files only after stopping all database writers, restart, and verify the restored records. JSON/CSV import is outside the initial scope; do not advertise it unless implemented and checked.
+
+Keep real databases and backups out of version control and any source-code package shared with another person.
+
+### Local startup and restart
+
+Provide two clear running modes. Development mode starts the Vite interface, normally on port 5173, and the backend, normally on port 3001. Vite forwards data requests to the backend. This is one application using two processes, not two copies of the user’s data.
+
+Everyday mode builds the interface and serves it through the backend on port 3001. Explain that it needs a rebuild after frontend changes. The learner should use one mode at a time rather than repeatedly starting additional servers.
+
+Listen on the local loopback address by default. Opening the browser tab alone does not start the app. Closing a tab does not necessarily stop the terminal’s server process. Closing the process makes the local address unavailable but does not erase the database.
+
+Teach how to start, stop, and restart using the project’s actual instructions. If a port is already occupied, identify the existing process or choose a deliberate alternate configuration. Do not kill unrelated processes. If using an alternate backend port, update the frontend’s connection settings too.
+
+## Suggested teaching and implementation milestones
+
+### Milestone 1: understand and prepare
+
+Discuss the purpose, inspect the project location, install only the needed tools, and verify them. Make a short implementation plan and an initial checkpoint. The learner should be able to point to the folder and explain how the browser, backend, and database relate.
+
+### Milestone 2: establish a working foundation
+
+Create the frontend, backend, and SQLite store. Start the app and verify that the frontend can retrieve information from the backend. Do not stop at “the server started.” Confirm the actual browser page loads and the stylesheet is included. Establish the navigation and README instructions.
+
+### Milestone 3: save and reopen an opportunity
+
+Build the add form, validation, duplicate warning, application list, and detail workspace. Use a clearly marked temporary test record. Save, reload, stop the app, restart it, and confirm the record remains. Remove the test record after verification without automatically repopulating sample data.
+
+### Milestone 4: connect people and next actions
+
+Implement contacts, timeline, automatic follow-ups, manual actions, one-click completion, and optional successors. Check that repeated saves do not create duplicate automatic actions and that one opportunity can have several contacts and follow-ups.
+
+### Milestone 5: finish the working views
+
+Build summary cards, clickable pipeline, search/sort/filter controls, quick actions, separate Contacts and Follow-ups pages, and analytics. Check that edits in one place update the other views. Verify zero-data and low-data behavior.
+
+### Milestone 6: refine appearance and personality
+
+Apply Forest and Ocean, check light/dark modes, add the 10-author daily quote rotation, remove branding, and check desktop and mobile layouts. Ask the learner for specific visual feedback. Preserve functionality during appearance changes.
+
+### Milestone 7: verify and hand over
+
+Run meaningful automated checks, perform the acceptance walkthrough below, verify export and backup restoration, and show the learner everyday startup. Confirm they can resume the project with a fresh chatbot. Create a final working checkpoint and a short list of any genuine limitations.
+
+## Acceptance walkthrough: evidence that the app works
+
+The tutor should guide these checks in a temporary test database when possible, so the final workspace remains empty and personal data is protected.
+
+| Check | Expected result |
+| --- | --- |
+| First launch | No fictional applications, contacts, or history. Useful empty states and the quote panel appear. |
+| Add an application | Required fields are clear, the record appears, and it has an assigned identifier. |
+| Enter today as applied date | One automatic follow-up appears exactly seven calendar days later. |
+| Save unchanged application again | No duplicate automatic follow-up is created. |
+| Add a duplicate company/title | A warning appears; a deliberate separate-opportunity override works. |
+| Change Interested to Applied | An undated job receives today’s date, a follow-up, and stage history. |
+| Change stages from the table | Detail, dashboard counts, filters, and timeline agree. |
+| Add two contacts | Both appear on the job, and the primary-contact behavior is consistent. |
+| Associate a person with another job | Their contact view shows both opportunities without merging unrelated people. |
+| Record outreach | The activity and seven-day follow-up are created once. |
+| Add several follow-ups | Earlier actions remain intact. |
+| Enter yesterday, today, and future due dates | Actions appear in the correct queue sections and dashboard order. |
+| Complete an action | It immediately leaves the incomplete queue and remains in completed history. |
+| Accept another follow-up | A separate action appears seven days from today. |
+| Save notes and description | Both persist separately, including multiline text. |
+| Search and combine filters | Matching rows and counts are correct; reset restores the full list. |
+| Open a posting or source link | It opens in a new tab without losing the workspace. |
+| Inspect analytics | History-based counts are explainable; zero-data rates do not break the page. |
+| Change palette and dark mode | Both themes are readable and preferences survive refresh. |
+| Exercise quote dates | Ten consecutive local dates show ten different authors; the same day is stable. |
+| Inspect mobile and keyboard behavior | Navigation, dialogs, forms, table actions, and focus remain usable. |
+| Export CSV and JSON | Downloads include the expected records and preserve multiline/quoted text. |
+| Back up and restore in a temporary location | Applications, people, actions, and history are preserved together. |
+| Restart the application | Saved records remain and no samples are created. |
+| Build for everyday use | One-server mode serves the styled app and still saves data. |
+
+Automated checks should cover meaningful business behavior: validation, duplicates, stage history, automatic follow-ups, contact associations, repeated completion, date boundaries, file-database reopening, and snapshot backup. Include TypeScript checking, linting, and the production build. The tutor must distinguish checks actually executed from checks left for the learner to perform.
+
+## Troubleshooting without guessing
+
+| Symptom | First thing to investigate |
+| --- | --- |
+| Browser says it cannot connect | Are the required processes running, and is the address the one shown by the current startup? |
+| It seems to be running twice | Is this the expected frontend/backend pair, or did the learner start a second copy? |
+| Page looks like plain, unstyled text | Is the main stylesheet imported and included in the build? Inspect loading before redesigning the whole app. |
+| Interface appears, but records do not load | Is the backend running and is the frontend forwarding requests to the correct address? |
+| Installation cannot reach the package registry | Check the actual network/DNS error. Repeated startup attempts will not install missing dependencies. |
+| SQLite dependency fails to install | Check Node/library compatibility and the exact native-build error before recommending build tools. |
+| A command is not recognized | Verify installation, terminal restart, selected shell, and whether the terminal is in the correct project folder. |
+| A form says it saved, but data disappears | Inspect the save response, database path, and whether later reads use the same database. |
+| Sample jobs reappear after clearing | Find automatic seeding and ensure it is opt-in, not triggered by an empty database. |
+| A date is off by one day | Check local calendar date handling and avoid interpreting a date-only value as the wrong time zone. |
+| A palette changes only a few elements | Look for fixed colors outside the shared theme definitions. |
+| Production view looks outdated | Rebuild the interface, restart the correct server, and refresh the browser. |
+| The assistant’s tools cannot open ports | Have the learner run the startup in their own terminal; do not claim a restricted process is accessible. |
+
+Fix one cause at a time. Ask the learner to try the smallest useful check and report its outcome before making dependent changes.
+
+## Practice prompts for continuing to learn
+
+Use these after the baseline app works:
+
+> Explain where the app saves its data. Help me make a backup and prove it can be restored using a temporary copy.
+
+> Show me which files control the Ocean theme. Help me change one accent color, check it in light and dark modes, and create a working checkpoint.
+
+> Walk me through how one saved application becomes a dashboard total. Use plain language and the actual files in this project.
+
+> Help me find and fix this problem. First reproduce it, then explain the cause, make a focused change, and verify the result. Preserve my records.
+
+> Add one small feature: let me choose which contact is primary for an opportunity. Explain the data change, make a backup before changing the database, and preserve existing contacts and associations.
+
+> Before we finish, write a handover describing how I start the app tomorrow, how I stop it, where my data is, and how I return to the last working version.
+
+Gmail integration, calendar integration, job imports, AI job-description analysis, and automatic reminders are future possibilities. They are not part of the initial build. The current app records actions; it does not send messages, read an inbox, scrape job websites, or operate while the local server is stopped.
+
+## Final handover the tutor must provide
+
+Leave the learner with the working project folder, a plain-language README, a record of verified checks, backup/restore instructions, a clean initial workspace, and a version-control checkpoint or another clearly explained recovery method.
+
+Explain that recreating the source files and restoring the database are different tasks. A code checkpoint helps recover the software; a database backup helps recover job-search information. Theme choices live in that browser’s local preferences and need not be included in the database backup.
+
+The learner should be able to start the app again without reopening the chatbot. They should also know how to ask for help with the project location, exact symptom, recent change, and relevant error message.
+
+## Official setup references for the tutor
+
+Installation requirements change. Confirm them when helping the learner; do not freeze this guide to an outdated installer.
+
+- [Node.js downloads](https://nodejs.org/en/download) and [supported Node.js releases](https://nodejs.org/en/about/previous-releases): select a supported release compatible with the project.
+- [npm installation guidance](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/): installing Node.js and npm.
+- [Visual Studio Code getting started](https://code.visualstudio.com/docs/getstarted/overview): editor installation and basic workspace concepts. Other suitable editors are acceptable.
+- [Git downloads](https://git-scm.com/downloads/): optional local version-history tooling. A GitHub account is not required for local checkpoints.
+- [Vite getting started](https://vite.dev/guide/): current frontend-tool requirements.
+- [better-sqlite3](https://github.com/WiseLibs/better-sqlite3): SQLite library installation and compatibility.
+- [node-gyp installation prerequisites](https://github.com/nodejs/node-gyp#installation): platform build tools when a native component actually needs compilation.
+
+The first response after receiving this guide should introduce the learning process briefly, ask which operating system and tools the learner has, and propose the first small setup step. It should not deliver a wall of generated code.
