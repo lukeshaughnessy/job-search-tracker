@@ -3,13 +3,13 @@ import type { Data, Job, Contact, Followup, Activity } from '../shared/models';
 import { stages, sources, relationships } from '../shared/models';
 import { addDays, today } from '../src/utils/dates';
 export class ValidationError extends Error {}
-const jobFields = ['company', 'title', 'url', 'location', 'work_mode', 'compensation', 'found_date', 'applied_date', 'source', 'referral', 'description', 'notes', 'fit', 'interest', 'priority', 'stage'];
+const jobFields = ['company', 'title', 'url', 'location', 'work_mode', 'compensation', 'found_date', 'applied_date', 'source', 'referral', 'description', 'notes', 'priority', 'stage'];
 const contactFields = ['job_id', 'name', 'title', 'company', 'email', 'linkedin', 'relationship', 'first_contacted', 'last_contacted', 'notes'];
 const followFields = ['job_id', 'contact_id', 'due_date', 'completed', 'type', 'notes', 'next_action'];
 function validate(input: Record<string, any>) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new ValidationError('Invalid record.');
   for (const [key, value] of Object.entries(input)) {
-    if ([...jobFields,...contactFields,...followFields,'text'].includes(key) && !['fit','interest','job_id','contact_id','completed'].includes(key) && typeof value !== 'string') throw new ValidationError('Text fields must contain text.');
+    if ([...jobFields,...contactFields,...followFields,'text'].includes(key) && !['job_id','contact_id','completed'].includes(key) && typeof value !== 'string') throw new ValidationError('Text fields must contain text.');
     if (key.endsWith('_date') || key.endsWith('_contacted')) {
       if (value) {
         const parsed = new Date(value + 'T12:00:00Z');
@@ -27,7 +27,6 @@ function validate(input: Record<string, any>) {
   if (input.stage && !stages.includes(input.stage)) throw new ValidationError('Invalid stage.');
   if (input.source && !sources.includes(input.source)) throw new ValidationError('Invalid source.');
   if (input.relationship && !relationships.includes(input.relationship)) throw new ValidationError('Invalid relationship.');
-  for (const key of ['fit', 'interest']) if (input[key] != null && (!Number.isInteger(Number(input[key])) || input[key] < 1 || input[key] > 5)) throw new ValidationError('Ratings must be from 1 to 5.');
   if (input.work_mode && !['Remote', 'Hybrid', 'On-site'].includes(input.work_mode)) throw new ValidationError('Invalid work arrangement.');
   if (input.priority && !['High', 'Medium', 'Low', ''].includes(input.priority)) throw new ValidationError('Invalid priority.');
 }

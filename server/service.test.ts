@@ -14,9 +14,7 @@ test('application, duplicate protection, stage history, outreach and repeat foll
     company: 'Acme',
     title: 'Engineering Manager',
     stage: 'Applied',
-    applied_date: today(),
-    fit: 5,
-    interest: 4
+    applied_date: today()
   });
   assert.throws(() => s.createJob({
     company: ' acme ',

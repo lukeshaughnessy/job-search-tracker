@@ -35,7 +35,7 @@ Tests exercise duplicate protection, stage history, automatic follow-ups, contac
 
 ## Data and backups
 
-Data lives in `data/tracker.sqlite`, created on first start. New workspaces start empty. To opt into fictional demo opportunities in a separate database, run `SEED_DATA=true DB_PATH=data/demo.sqlite npm run dev`; seeding only occurs when its jobs table is empty. All dates are interpreted as local calendar dates. Existing database records survive development restarts and builds. The database is excluded from Git.
+Data lives in `data/tracker.sqlite`, created on first start. New workspaces start empty. To opt into fictional demo opportunities in a separate database, run `SEED_DATA=true DB_PATH=data/demo.sqlite npm run dev`; seeding only occurs when its jobs table is empty. All dates are interpreted as local calendar dates. Existing database records survive development restarts and builds. On startup, legacy Fit and Interest columns are removed while applications and related records are retained. The database is excluded from Git.
 
 To start an empty workspace, use a separate file with seeding disabled:
 
@@ -49,7 +49,7 @@ To restore a SQLite backup, stop the app, retain a copy of your current database
 
 ## Using the workspace
 
-- Add or edit applications with fit and interest ratings, priority, source, compensation, preserved descriptions, and notes.
+- Add or edit applications with priority, source, compensation, preserved descriptions, and notes.
 - Click pipeline stages to filter applications. Search company, role, contact names/contact notes, and application notes. Table column headers sort; Filters expands company, location, and application date range controls.
 - Change a stage directly in the table; its row menu adds contacts, notes, follow-ups, or marks rejected.
 - Applications with an applied date automatically receive a follow-up seven days later. Changing an undated opportunity to Applied records today and adds a follow-up. Recording a new last-contacted date creates an outreach activity and another follow-up. These are separate entries, never overwrites.

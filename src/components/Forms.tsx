@@ -44,8 +44,6 @@ export function Editor({
     referral: '',
     description: '',
     notes: '',
-    fit: 4,
-    interest: 4,
     priority: 'Medium',
     stage: 'Interested'
   } : kind.type === 'contact' ? kind.contact || {
@@ -81,7 +79,7 @@ export function Editor({
     })} /></Field>;
   const select = (key: string, label: string, options: string[], wide = false) => <Field label={label} wide={wide}><select value={value[key] ?? ''} onChange={e => setValue({
       ...value,
-      [key]: ['fit', 'interest'].includes(key) ? Number(e.target.value) : e.target.value
+      [key]: e.target.value
     })}>{options.map(o => <option key={o} value={o}>{o || 'None'}</option>)}</select></Field>;
   const area = (key: string, label: string) => <Field label={label} wide><textarea autoFocus={kind.type === 'note'} rows={key === 'description' ? 6 : 4} value={value[key] ?? ''} onChange={e => setValue({
       ...value,
@@ -115,7 +113,7 @@ export function Editor({
     }
   }}>
  <div className="form-grid">
- {kind.type === 'job' && <>{input('company', 'Company', 'text', false, true)}{input('title', 'Job title', 'text', false, true)}{input('url', 'Job posting URL', 'url', true)}{input('location', 'Location')}{select('work_mode', 'Work arrangement', ['Remote', 'Hybrid', 'On-site'])}{input('compensation', 'Compensation range')}{select('stage', 'Pipeline stage', [...stages])}{input('found_date', 'Date found', 'date')}{input('applied_date', 'Date applied', 'date')}{select('source', 'Source', sources)}{input('referral', 'Referral / contact source')}{select('fit', 'Fit rating', ['1', '2', '3', '4', '5'])}{select('interest', 'Interest rating', ['1', '2', '3', '4', '5'])}{select('priority', 'Priority', ['', 'High', 'Medium', 'Low'])}{area('notes', 'Notes')}{area('description', 'Job description')}<p className="form-hint wide">An application date automatically adds a follow-up 7 days later.</p></>}
+ {kind.type === 'job' && <>{input('company', 'Company', 'text', false, true)}{input('title', 'Job title', 'text', false, true)}{input('url', 'Job posting URL', 'url', true)}{input('location', 'Location')}{select('work_mode', 'Work arrangement', ['Remote', 'Hybrid', 'On-site'])}{input('compensation', 'Compensation range')}{select('stage', 'Pipeline stage', [...stages])}{input('found_date', 'Date found', 'date')}{input('applied_date', 'Date applied', 'date')}{select('source', 'Source', sources)}{input('referral', 'Referral / contact source')}{select('priority', 'Priority', ['', 'High', 'Medium', 'Low'])}{area('notes', 'Notes')}{area('description', 'Job description')}<p className="form-hint wide">An application date automatically adds a follow-up 7 days later.</p></>}
  {(kind.type === 'contact' || kind.type === 'followup') && <Field label="Associated opportunity" wide><select required value={value.job_id} onChange={e => setValue({
           ...value,
           job_id: Number(e.target.value),

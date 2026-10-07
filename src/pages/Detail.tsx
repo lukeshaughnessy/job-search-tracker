@@ -3,7 +3,7 @@ import { Plus, ExternalLink, ChevronRight } from 'lucide-react';
 import type { Job } from '../../shared/models';
 import { stages, state } from '../../shared/models';
 import { days, formatDate } from '../utils/dates';
-import { Badge, Rating, Empty } from '../components/UI';
+import { Badge, Empty } from '../components/UI';
 import { type Context, tone, FollowupList, CompanyMark } from './shared';
 export function Detail({
   job,
@@ -35,7 +35,7 @@ export function Detail({
           job
         })}>Edit application</button>{job.url && <a className="button primary" href={job.url} target="_blank" rel="noreferrer">Open job posting <ExternalLink size={15} /></a>}</div><div className="detail-facts"><div><small>Status</small><Badge tone={tone(job.stage)}>{state(job.stage)}</Badge></div><div><small>Pipeline stage</small><select aria-label="Pipeline stage" value={job.stage} onChange={e => void ctx.save('jobs/' + job.id, {
             stage: e.target.value
-          }, 'PATCH')}>{stages.map(s => <option key={s}>{s}</option>)}</select></div><div><small>Applied / days active</small><strong>{formatDate(job.applied_date)} · {days(job.applied_date) ?? 0} days</strong></div><div><small>Fit / interest</small><Rating value={job.fit} /><Rating value={job.interest} /></div><div><small>Location</small><strong>{job.location || '—'}</strong><small>{job.work_mode}</small></div><div><small>Compensation</small><strong>{job.compensation || '—'}</strong></div></div><div className="detail-meta">Found {formatDate(job.found_date)} · {job.source} · {job.priority || 'No'} priority {job.referral && `· Referred by ${job.referral}`}</div></section>
+          }, 'PATCH')}>{stages.map(s => <option key={s}>{s}</option>)}</select></div><div><small>Applied / days active</small><strong>{formatDate(job.applied_date)} · {days(job.applied_date) ?? 0} days</strong></div><div><small>Location</small><strong>{job.location || '—'}</strong><small>{job.work_mode}</small></div><div><small>Compensation</small><strong>{job.compensation || '—'}</strong></div></div><div className="detail-meta">Found {formatDate(job.found_date)} · {job.source} · {job.priority || 'No'} priority {job.referral && `· Referred by ${job.referral}`}</div></section>
  <div className="detail-grid"><div><section className="card"><div className="section-heading"><h2>Contacts <span className="count-pill">{contacts.length}</span></h2><button className="text-button" onClick={() => ctx.edit({
               type: 'contact',
               job

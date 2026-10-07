@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import { X, Star } from 'lucide-react';
+import { X } from 'lucide-react';
 export function Badge({
   children,
   tone = ''
@@ -8,15 +8,6 @@ export function Badge({
   tone?: string;
 }) {
   return <span className={`badge ${tone}`}>{children}</span>;
-}
-export function Rating({
-  value
-}: {
-  value: number;
-}) {
-  return <span className="rating" aria-label={`${value} out of 5`}>{Array.from({
-      length: 5
-    }, (_, i) => <Star key={i} size={11} fill={i < value ? 'currentColor' : 'none'} className={i < value ? '' : 'empty'} />)}</span>;
 }
 export function Modal({
   title,

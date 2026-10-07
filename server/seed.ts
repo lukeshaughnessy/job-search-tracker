@@ -4,8 +4,8 @@ import { today, addDays } from '../src/utils/dates';
 export function seed(db: DB) {
   if (db.prepare('SELECT id FROM jobs LIMIT 1').get()) return;
   const s = service(db);
-  const examples = [['Meridian', 'Senior Engineering Manager — Platform Engineering', 'Hiring Manager', 'Referral', 'San Francisco, CA', 5, 5, -18, '$220k – $280k', 'Maya Chen'], ['Northstar', 'Director of Platform Engineering', 'Technical Interview', 'Recruiter', 'Denver, CO', 5, 5, -25, '$250k – $320k', 'Alex Rivera'], ['Parallel', 'Engineering Manager — Infrastructure', 'Recruiter Screen', 'LinkedIn', 'Remote, US', 4, 5, -10, '$190k – $240k', 'Jordan Lee'], ['Orbit', 'Engineering Manager — SRE', 'Applied', 'Company website', 'Seattle, WA', 4, 4, -5, '$200k – $260k', 'Sam Patel'], ['Forma', 'Senior Engineering Manager — Developer Experience', 'Interested', 'Networking', 'New York, NY', 5, 4, 0, '$210k – $275k', 'Taylor Brooks'], ['Relay', 'Director of Engineering', 'Offer', 'Referral', 'Remote, US', 5, 5, -40, '$260k – $340k', 'Morgan Ellis'], ['Cedar', 'Engineering Manager — Cloud Infrastructure', 'Rejected', 'LinkedIn', 'Austin, TX', 3, 3, -30, '$185k – $230k', 'Jamie Park'], ['Arcade', 'Engineering Manager — Reliability', 'Panel / Onsite', 'Company website', 'Boulder, CO', 4, 4, -21, '$205k – $265k', 'Casey Wu']];
-  for (const [company, title, stage, source, location, fit, interest, offset, compensation, name] of examples) {
+  const examples = [['Meridian', 'Senior Engineering Manager — Platform Engineering', 'Hiring Manager', 'Referral', 'San Francisco, CA', 'High', -18, '$220k – $280k', 'Maya Chen'], ['Northstar', 'Director of Platform Engineering', 'Technical Interview', 'Recruiter', 'Denver, CO', 'High', -25, '$250k – $320k', 'Alex Rivera'], ['Parallel', 'Engineering Manager — Infrastructure', 'Recruiter Screen', 'LinkedIn', 'Remote, US', 'Medium', -10, '$190k – $240k', 'Jordan Lee'], ['Orbit', 'Engineering Manager — SRE', 'Applied', 'Company website', 'Seattle, WA', 'Medium', -5, '$200k – $260k', 'Sam Patel'], ['Forma', 'Senior Engineering Manager — Developer Experience', 'Interested', 'Networking', 'New York, NY', 'High', 0, '$210k – $275k', 'Taylor Brooks'], ['Relay', 'Director of Engineering', 'Offer', 'Referral', 'Remote, US', 'High', -40, '$260k – $340k', 'Morgan Ellis'], ['Cedar', 'Engineering Manager — Cloud Infrastructure', 'Rejected', 'LinkedIn', 'Austin, TX', 'Medium', -30, '$185k – $230k', 'Jamie Park'], ['Arcade', 'Engineering Manager — Reliability', 'Panel / Onsite', 'Company website', 'Boulder, CO', 'Medium', -21, '$205k – $265k', 'Casey Wu']];
+  for (const [company, title, stage, source, location, priority, offset, compensation, name] of examples) {
     const applied = stage === 'Interested' ? '' : addDays(today(), Number(offset));
     const id = s.createJob({
       company,
@@ -13,11 +13,9 @@ export function seed(db: DB) {
       stage: 'Interested',
       source,
       location,
-      fit,
-      interest,
       compensation,
       work_mode: company === 'Northstar' || company === 'Arcade' ? 'Hybrid' : 'Remote',
-      priority: Number(fit) === 5 ? 'High' : 'Medium',
+      priority,
       found_date: addDays(today(), Number(offset) - 3),
       applied_date: applied,
       url: 'https://example.com/careers',

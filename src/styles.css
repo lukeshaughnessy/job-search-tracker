@@ -673,14 +673,6 @@ small {
   background: #f6eee8;
   color: #b0876b
 }
-.rating {
-  display: inline-flex;
-  gap: 2px;
-  color: var(--tone-a4ad79)
-}
-.rating .empty {
-  color: var(--tone-dbe0d6)
-}
 .page-footer {
   display: flex;
   justify-content: space-between;
@@ -914,7 +906,7 @@ tbody tr:hover {
   padding-top: 23px;
   border-top: 1px solid var(--border);
   display: grid;
-  grid-template-columns: repeat(6,1fr);
+  grid-template-columns: repeat(4,1fr);
   gap: 20px
 }
 .detail-facts>div {

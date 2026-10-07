@@ -16,8 +16,6 @@ export interface Job {
   referral: string;
   description: string;
   notes: string;
-  fit: number;
-  interest: number;
   priority: string;
   stage: Stage;
   created_at: string;
