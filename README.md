@@ -22,6 +22,38 @@ npm start
 
 Open **http://127.0.0.1:3001**. Restart `npm start` after rebuilding frontend changes.
 
+## Start automatically at machine boot (Linux/systemd)
+
+Stop any running `npm run dev` or `npm start` session first, then run this once from a terminal on your computer as your normal user:
+
+```bash
+bash scripts/install-autostart.sh
+```
+
+The installer builds the app, creates and enables a systemd user service, enables user lingering so it starts before login, and checks the app and API are running. Your system may request administrator permission to enable lingering. The service uses your existing database, disables demo seeding, and restarts after a crash. Open **http://127.0.0.1:3001**; no terminal needs to remain open. It does not automatically open a browser.
+
+To use a custom existing database, set `DB_PATH` when running the installer. Run the installer from the directory where the app will remain; moving it requires rerunning the installer. The installer is idempotent and can also rebuild/restart the app after updates.
+
+```bash
+systemctl --user status job-search-tracker.service
+journalctl --user -u job-search-tracker.service -n 50
+```
+
+After making changes:
+
+```bash
+npm run build
+systemctl --user restart job-search-tracker.service
+```
+
+To stop the app and disable automatic startup:
+
+```bash
+systemctl --user disable --now job-search-tracker.service
+```
+
+User lingering is left enabled because other user services may rely on it. The installer supports Linux computers with systemd; macOS and Windows need their own startup mechanism.
+
 ## Checks
 
 ```bash
@@ -31,11 +63,11 @@ npm test
 npm run build
 ```
 
-Tests exercise duplicate protection, stage history, automatic follow-ups, contact ownership, validation, repeat completion, persistence after reopening SQLite, and database backups.
+Tests exercise duplicate protection, stage history, automatic follow-ups, contact ownership, validation, repeat completion, persistence after reopening SQLite, interview scheduling/rescheduling and validation, calendar/dashboard rendering, and database backups.
 
 ## Data and backups
 
-Data lives in `data/tracker.sqlite`, created on first start. New workspaces start empty. To opt into fictional demo opportunities in a separate database, run `SEED_DATA=true DB_PATH=data/demo.sqlite npm run dev`; seeding only occurs when its jobs table is empty. All dates are interpreted as local calendar dates. Existing database records survive development restarts and builds. On startup, legacy Fit and Interest columns are removed while applications and related records are retained. The database is excluded from Git.
+Data lives in `data/tracker.sqlite`, created on first start. New workspaces start empty. To opt into fictional demo opportunities in a separate database, run `SEED_DATA=true DB_PATH=data/demo.sqlite npm run dev`; seeding only occurs when its jobs table is empty. Application and follow-up dates are interpreted as local calendar dates. Interview timestamps retain their exact instant and display in your computer’s current time zone. Existing database records survive development restarts and builds. On startup, legacy Fit and Interest columns are removed while applications and related records are retained. The database is excluded from Git.
 
 To start an empty workspace, use a separate file with seeding disabled:
 
@@ -43,7 +75,7 @@ To start an empty workspace, use a separate file with seeding disabled:
 SEED_DATA=false DB_PATH=data/my-search.sqlite npm run dev
 ```
 
-Use **Export → SQLite backup** to download a consistent snapshot of the complete database, including contacts, follow-ups, and history. **All data JSON** exports every table. CSV exports one row per opportunity with contacts, follow-ups, and activities in JSON columns.
+Use **Export → SQLite backup** to download a consistent snapshot of the complete database, including contacts, follow-ups, interviews, and history. **All data JSON** exports every table. CSV exports one row per opportunity with contacts, follow-ups, interviews, and activities in JSON columns.
 
 To restore a SQLite backup, stop the app, retain a copy of your current database, and replace `data/tracker.sqlite` with the downloaded backup. Remove any stale `data/tracker.sqlite-wal` and `data/tracker.sqlite-shm` sidecar files before restarting. Use the same procedure with your custom `DB_PATH`. JSON/CSV import is not currently provided.
 
@@ -51,6 +83,9 @@ To restore a SQLite backup, stop the app, retain a copy of your current database
 
 - Add or edit applications with priority, source, compensation, preserved descriptions, and notes.
 - Click pipeline stages to filter applications. Search company, role, contact names/contact notes, and application notes. Table column headers sort; Filters expands company, location, and application date range controls.
+- Open an application and choose **Schedule interview**, or use its table row menu. Record the interview stage, date and start time, duration, phone/video/in-person format, contact information, meeting link or address, preparation, and notes. Edit to reschedule or cancel; mark appointments complete directly in the list. Scheduling does not change the application pipeline stage.
+- **Calendar → Add appointment** defaults to a standalone appointment: enter a title, date/time, and any contact, location, meeting, or note details without selecting a company. You can optionally select an application to schedule an interview instead. Standalone appointments appear on the dashboard and are included in JSON exports and SQLite backups; the application CSV contains only application-associated records.
+- **Calendar** shows a Sunday-first monthly schedule with a selected-day agenda. Click anywhere in a calendar day square to open a new appointment form with that date filled in. Click an existing appointment to edit it. The dashboard lists today’s scheduled appointments and the next four upcoming interviews, with a link to the complete calendar. Completed and cancelled appointments remain saved; cancelled appointments are hidden from the calendar unless enabled.
 - Change a stage directly in the table; its row menu adds contacts, notes, follow-ups, or marks rejected.
 - Applications with an applied date automatically receive a follow-up seven days later. Changing an undated opportunity to Applied records today and adds a follow-up. Recording a new last-contacted date creates an outreach activity and another follow-up. These are separate entries, never overwrites.
 - Complete an action with one click on its check button, then optionally add another action seven days later.
@@ -76,7 +111,7 @@ server/seed.ts          Date-relative fictional demo data
 server/index.ts         HTTP routes, exports, backup, static hosting
 server/service.test.ts  Database/business behavior tests
 src/components/        Reusable UI and forms
-src/pages/             Separate dashboard, applications/detail, contacts, queue, analytics pages
+src/pages/             Separate dashboard, applications/detail, contacts, queue, calendar, analytics pages
 src/utils/dates.ts      Local calendar date calculations
 src/api.ts              API client
 src/App.tsx             Navigation and workspace state

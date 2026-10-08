@@ -41,6 +41,8 @@ app.post('/api/followups/:id/complete', (req, res) => {
     ok: true
   });
 });
+app.post('/api/interviews', (req, res) => res.status(201).json({ id: s.saveInterview(req.body) }));
+app.patch('/api/interviews/:id', (req, res) => res.json({ id: s.saveInterview(req.body, Number(req.params.id)) }));
 app.post('/api/activities', (req, res) => {
   s.addActivity(req.body);
   res.status(201).json({
@@ -53,6 +55,7 @@ app.get('/api/export/csv', (_req, res) => {
   const jobs = (data.jobs as Record<string, any>[]);
   const rows = jobs.map(j => ({
     ...j,
+    interviews: JSON.stringify(data.interviews.filter(i => i.job_id === j.id)),
     contacts: JSON.stringify((data.contacts as any[]).filter(c => c.job_id === j.id)),
     followups: JSON.stringify((data.followups as any[]).filter(f => f.job_id === j.id)),
     activities: JSON.stringify((data.activities as any[]).filter(a => a.job_id === j.id))

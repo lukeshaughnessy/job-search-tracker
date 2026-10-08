@@ -66,7 +66,7 @@ test('application surfaces omit ratings and dashboard uses high priority', () =>
     const surfaces = [
       createElement(Applications, { ctx, initialStage: '' }),
       createElement(Detail, { ctx, job, back: () => {} }),
-      createElement(Dashboard, { ctx, filter: () => {} }),
+      createElement(Dashboard, { ctx, filter: () => {}, calendar: () => {} }),
       createElement(Editor, { kind: { type: 'job' }, data, save: async () => {}, close: () => {} }),
       createElement(Editor, { kind: { type: 'job', job }, data, save: async () => {}, close: () => {} })
     ];

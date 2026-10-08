@@ -52,10 +52,32 @@ export interface Activity {
   stage: string;
   created_at: string;
 }
+export const interviewStages = ['Phone Screen', 'Recruiter Screen', 'Hiring Manager', 'Technical Interview', 'Panel / Onsite', 'Final Interview', 'Other'] as const;
+export interface Interview {
+  id: number;
+  job_id: number | null;
+  title?: string;
+  contact_id: number | null;
+  stage: string;
+  starts_at: string;
+  timezone: string;
+  duration_minutes: number;
+  format: string;
+  status: string;
+  contact_name: string;
+  contact_email: string;
+  contact_phone: string;
+  meeting_url: string;
+  location: string;
+  notes: string;
+  preparation: string;
+  created_at: string;
+}
 export interface Data {
   jobs: Job[];
   contacts: Contact[];
   followups: Followup[];
   activities: Activity[];
+  interviews: Interview[];
 }
 export const state = (stage: string) => stage === 'Rejected' ? 'Rejected' : stage === 'Offer' ? 'Offer' : stage === 'Withdrawn' ? 'Closed' : 'Active';

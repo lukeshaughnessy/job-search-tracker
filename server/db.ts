@@ -18,6 +18,24 @@ export function openDatabase(path = process.env.DB_PATH || 'data/tracker.sqlite'
       if (jobColumns.some(column => column.name === field)) db.exec(`ALTER TABLE jobs DROP COLUMN ${field}`);
     }
   })();
+  const interviewSchema = `CREATE TABLE IF NOT EXISTS interviews (
+    id INTEGER PRIMARY KEY, job_id INTEGER REFERENCES jobs(id) ON DELETE CASCADE,
+    contact_id INTEGER REFERENCES contacts(id) ON DELETE SET NULL,
+    stage TEXT NOT NULL, starts_at TEXT NOT NULL, timezone TEXT NOT NULL,
+    duration_minutes INTEGER NOT NULL DEFAULT 60 CHECK(duration_minutes BETWEEN 5 AND 1440),
+    format TEXT NOT NULL DEFAULT 'Video', status TEXT NOT NULL DEFAULT 'Scheduled' CHECK(status IN ('Scheduled','Completed','Cancelled')),
+    contact_name TEXT DEFAULT '', contact_email TEXT DEFAULT '', contact_phone TEXT DEFAULT '',
+    meeting_url TEXT DEFAULT '', location TEXT DEFAULT '', notes TEXT DEFAULT '', preparation TEXT DEFAULT '',
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP, title TEXT NOT NULL DEFAULT '');`;
+  db.exec(interviewSchema);
+  const columns = db.prepare('PRAGMA table_info(interviews)').all() as {name: string; notnull: number}[];
+  if (!columns.some(c => c.name === 'title')) db.exec("ALTER TABLE interviews ADD COLUMN title TEXT NOT NULL DEFAULT ''");
+  if (columns.find(c => c.name === 'job_id')?.notnull) db.transaction(() => {
+    db.exec(interviewSchema.replace('interviews (', 'interviews_new ('));
+    const fields = [...columns.map(c => c.name), ...(columns.some(c => c.name === 'title') ? [] : ['title'])].join(',');
+    db.exec(`INSERT INTO interviews_new (${fields}) SELECT ${fields} FROM interviews; DROP TABLE interviews; ALTER TABLE interviews_new RENAME TO interviews;`);
+  })();
+  db.exec('CREATE INDEX IF NOT EXISTS interviews_start ON interviews(starts_at)');
   return db;
 }
 export type DB = ReturnType<typeof openDatabase>;

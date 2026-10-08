@@ -1,3 +1,5 @@
+import { InterviewList } from '../components/InterviewList';
+import { sortedInterviews } from '../utils/interviews';
 import { useState } from 'react';
 import { Plus, ExternalLink, ChevronRight } from 'lucide-react';
 import type { Job } from '../../shared/models';
@@ -33,10 +35,25 @@ export function Detail({
   return <><button className="text-button breadcrumb" onClick={back}>Applications <ChevronRight size={14} />{job.company}</button><section className="card detail-header"><div className="detail-title"><CompanyMark job={job} /><div><h1>{job.company}</h1><p>{job.title}</p></div><button className="button secondary" onClick={() => ctx.edit({
           type: 'job',
           job
-        })}>Edit application</button>{job.url && <a className="button primary" href={job.url} target="_blank" rel="noreferrer">Open job posting <ExternalLink size={15} /></a>}</div><div className="detail-facts"><div><small>Status</small><Badge tone={tone(job.stage)}>{state(job.stage)}</Badge></div><div><small>Pipeline stage</small><select aria-label="Pipeline stage" value={job.stage} onChange={e => void ctx.save('jobs/' + job.id, {
+        })}>Edit application</button>{job.url && <a className="button primary" href={job.url} target="_blank" rel="noreferrer">Open job posting <ExternalLink size={15} /></a>}</div>
+        <div className="job-posting-url">
+          <span className="job-posting-label">Job posting URL</span>
+          {job.url ? (
+            <a href={job.url} target="_blank" rel="noopener noreferrer" className="job-posting-link">
+              <ExternalLink size={16} aria-hidden="true" />
+              <span>{job.url}</span>
+            </a>
+          ) : (
+            <div className="job-posting-missing">
+              <span>No job posting URL saved.</span>
+              <button className="text-button" onClick={() => ctx.edit({type: 'job', job})}>Add job URL</button>
+            </div>
+          )}
+        </div>
+        <div className="detail-facts"><div><small>Status</small><Badge tone={tone(job.stage)}>{state(job.stage)}</Badge></div><div><small>Pipeline stage</small><select aria-label="Pipeline stage" value={job.stage} onChange={e => void ctx.save('jobs/' + job.id, {
             stage: e.target.value
           }, 'PATCH')}>{stages.map(s => <option key={s}>{s}</option>)}</select></div><div><small>Applied / days active</small><strong>{formatDate(job.applied_date)} · {days(job.applied_date) ?? 0} days</strong></div><div><small>Location</small><strong>{job.location || '—'}</strong><small>{job.work_mode}</small></div><div><small>Compensation</small><strong>{job.compensation || '—'}</strong></div></div><div className="detail-meta">Found {formatDate(job.found_date)} · {job.source} · {job.priority || 'No'} priority {job.referral && `· Referred by ${job.referral}`}</div></section>
- <div className="detail-grid"><div><section className="card"><div className="section-heading"><h2>Contacts <span className="count-pill">{contacts.length}</span></h2><button className="text-button" onClick={() => ctx.edit({
+ <div className="detail-grid"><div><section className="card"><div className="section-heading"><div><h2>Interviews & appointments</h2><p>Your scheduled conversations and interview notes</p></div><button className="button primary" onClick={() => ctx.edit({type: 'interview', job})}><Plus size={16} />Schedule interview</button></div><InterviewList items={sortedInterviews(ctx.data.interviews.filter(i => i.job_id === job.id))} ctx={ctx} /></section><section className="card"><div className="section-heading"><h2>Contacts <span className="count-pill">{contacts.length}</span></h2><button className="text-button" onClick={() => ctx.edit({
               type: 'contact',
               job
             })}><Plus size={15} />Add contact</button></div>{contacts.length ? contacts.map(c => <div className="contact-row" key={c.id}><span className="avatar">{c.name.split(' ').map(s => s[0]).join('')}</span><div><strong>{c.name}</strong><p>{c.title} · {c.company}</p><small>{c.relationship} · Last contacted {formatDate(c.last_contacted)}{c.last_contacted && ` (${days(c.last_contacted)} days ago)`}</small>{c.email && <a href={`mailto:${c.email}`}>{c.email}</a>}{c.linkedin && <a target="_blank" rel="noreferrer" href={c.linkedin}>LinkedIn ↗</a>}{c.notes && <p>{c.notes}</p>}</div><button className="text-button" onClick={() => ctx.edit({

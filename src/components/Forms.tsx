@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import type { Data, Job, Contact } from '../../shared/models';
+import type { Data, Job, Contact, Interview } from '../../shared/models';
 import { stages, sources, relationships } from '../../shared/models';
 import { today, addDays } from '../utils/dates';
 import { Field } from './UI';
-export type FormKind = {
+export type FormKind = { type: 'interview'; job?: Job; interview?: Interview; date?: string } | {
   type: 'job';
   job?: Job;
 } | {
@@ -26,7 +26,7 @@ export function Editor({
   save,
   close
 }: {
-  kind: FormKind;
+  kind: Exclude<FormKind, { type: 'interview' }>;
   data: Data;
   save: (path: string, body: any, method?: string) => Promise<void>;
   close: () => void;

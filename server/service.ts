@@ -1,6 +1,6 @@
 import type { DB } from './db';
-import type { Data, Job, Contact, Followup, Activity } from '../shared/models';
-import { stages, sources, relationships } from '../shared/models';
+import type { Data, Job, Contact, Followup, Activity, Interview } from '../shared/models';
+import { stages, sources, relationships, interviewStages } from '../shared/models';
 import { addDays, today } from '../src/utils/dates';
 export class ValidationError extends Error {}
 const jobFields = ['company', 'title', 'url', 'location', 'work_mode', 'compensation', 'found_date', 'applied_date', 'source', 'referral', 'description', 'notes', 'priority', 'stage'];
@@ -30,6 +30,7 @@ function validate(input: Record<string, any>) {
   if (input.work_mode && !['Remote', 'Hybrid', 'On-site'].includes(input.work_mode)) throw new ValidationError('Invalid work arrangement.');
   if (input.priority && !['High', 'Medium', 'Low', ''].includes(input.priority)) throw new ValidationError('Invalid priority.');
 }
+const interviewFields = ['title','job_id','contact_id','stage','starts_at','timezone','duration_minutes','format','status','contact_name','contact_email','contact_phone','meeting_url','location','notes','preparation'];
 export function service(db: DB) {
   const activity = (job: number, text: string, kind = 'note', stage = '', contact: number | null = null, date?: string) => db.prepare('INSERT INTO activities(job_id,text,kind,stage,contact_id,created_at) VALUES (?,?,?,?,?,?)').run(job, text, kind, stage, contact, date || new Date().toISOString());
   const get = (table: string, id: number) => {
@@ -59,7 +60,8 @@ export function service(db: DB) {
       jobs: db.prepare('SELECT * FROM jobs ORDER BY id DESC').all() as Job[],
       contacts: db.prepare('SELECT * FROM contacts ORDER BY id DESC').all() as Contact[],
       followups: db.prepare('SELECT * FROM followups ORDER BY id DESC').all() as Followup[],
-      activities: db.prepare('SELECT * FROM activities ORDER BY id DESC').all() as Activity[]
+      activities: db.prepare('SELECT * FROM activities ORDER BY id DESC').all() as Activity[],
+      interviews: db.prepare('SELECT * FROM interviews ORDER BY starts_at').all() as Interview[]
     }),
     createJob: db.transaction((input: any) => {
       validate(input);
@@ -121,6 +123,41 @@ export function service(db: DB) {
           next_action: `Follow up with ${input.name}`
         });
       }
+      return id;
+    }),
+    saveInterview: db.transaction((input: any, id?: number) => {
+      if (!input || typeof input !== 'object' || Array.isArray(input)) throw new ValidationError('Invalid interview.');
+      const old = id ? get('interviews', id) : null;
+      const next = { ...old, ...input };
+      next.job_id = next.job_id == null ? null : next.job_id;
+      if (next.job_id != null) {
+        if (!Number.isInteger(next.job_id) || next.job_id < 1) throw new ValidationError('Invalid application.');
+        get('jobs', next.job_id);
+      }
+      if (next.title !== undefined) {
+        if (typeof next.title !== 'string') throw new ValidationError('Appointment title must contain text.');
+        next.title = next.title.trim();
+      }
+      if (next.job_id == null && !next.title) throw new ValidationError('An appointment title is required.');
+      if (old && next.job_id !== old.job_id) throw new ValidationError('An interview cannot be moved to another job.');
+      if (next.contact_id != null && (!Number.isInteger(next.contact_id) || get('contacts', next.contact_id).job_id !== Number(next.job_id))) throw new ValidationError('Contact belongs to a different job.');
+      for (const key of interviewFields.filter(k => !['job_id','contact_id','duration_minutes'].includes(k))) {
+        if (next[key] !== undefined && typeof next[key] !== 'string') throw new ValidationError('Interview text fields must contain text.');
+      }
+      if (!interviewStages.includes(next.stage)) throw new ValidationError('Invalid interview stage.');
+      const start = new Date(next.starts_at);
+      if (typeof next.starts_at !== 'string' || !Number.isFinite(start.getTime()) || start.toISOString() !== next.starts_at) throw new ValidationError('Please enter a valid interview date and time.');
+      try { new Intl.DateTimeFormat('en-US', { timeZone: next.timezone }).format(start); }
+      catch { throw new ValidationError('Invalid time zone.'); }
+      if (!next.timezone) throw new ValidationError('A time zone is required.');
+      if (!Number.isInteger(next.duration_minutes) || next.duration_minutes < 5 || next.duration_minutes > 1440) throw new ValidationError('Duration must be 5–1440 minutes.');
+      if (!['Phone','Video','In person','Other'].includes(next.format)) throw new ValidationError('Invalid interview format.');
+      if (!['Scheduled','Completed','Cancelled'].includes(next.status)) throw new ValidationError('Invalid interview status.');
+      if (next.meeting_url) validate({ url: next.meeting_url });
+      if (id) update('interviews', interviewFields, id, next);
+      else id = insert('interviews', interviewFields, next);
+      const time = start.toLocaleString('en-US', { timeZone: next.timezone, dateStyle: 'medium', timeStyle: 'short' });
+      if (next.job_id != null) activity(next.job_id, `${old ? 'Updated' : 'Scheduled'} interview: ${next.stage} · ${time} (${next.timezone}) · ${next.status}`, 'interview', '', next.contact_id || null);
       return id;
     }),
     addFollowup: db.transaction(follow),

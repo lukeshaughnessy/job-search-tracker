@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LayoutDashboard, BriefcaseBusiness, Users, CalendarCheck2, ChartNoAxesCombined, Plus, Download, ChevronDown, Menu, Sun, Moon, Check, X, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, BriefcaseBusiness, Users, CalendarCheck2, CalendarDays, ChartNoAxesCombined, Plus, Download, ChevronDown, Menu, Sun, Moon, Check, X, ShieldCheck } from 'lucide-react';
 import type { Data, Job, Followup } from '../shared/models';
 import { today, addDays } from './utils/dates';
 import { loadData, request } from './api';
@@ -8,6 +8,8 @@ import { Applications } from './pages/Applications';
 import { Detail } from './pages/Detail';
 import { Contacts } from './pages/Contacts';
 import { Followups } from './pages/Followups';
+import { Calendar } from './pages/Calendar';
+import { InterviewForm } from './components/InterviewForm';
 import { Analytics } from './pages/Analytics';
 import { Modal } from './components/UI';
 import { DailyQuote } from './components/DailyQuote';
@@ -29,6 +31,10 @@ const nav = [{
   name: 'Follow-ups',
   icon: CalendarCheck2,
   desc: 'Your upcoming and completed actions.'
+}, {
+  name: 'Calendar',
+  icon: CalendarDays,
+  desc: 'Interview appointments, preparation, and your schedule.'
 }, {
   name: 'Analytics',
   icon: ChartNoAxesCombined,
@@ -135,10 +141,10 @@ export default function App() {
             })}><Plus size={17} />Add Application</button></div></header><DailyQuote />{error && <div className="error-banner" role="alert">{error}<button aria-label="Dismiss error" onClick={() => setError('')}><X size={17} /></button></div>}{!data ? <div className="empty-state">{error ? <button className="button secondary" onClick={() => {
             setError('');
             loadData().then(setData).catch(e => setError(e.message));
-          }}>Retry loading</button> : 'Loading your workspace…'}</div> : ctx && <>{current ? <Detail key={current.id} job={current} ctx={ctx} back={() => navigate('Applications')} /> : jobId ? <div className="empty-state">This application could not be found.<button className="text-button" onClick={() => navigate('Applications')}>Back to applications</button></div> : page === 'Dashboard' ? <Dashboard ctx={ctx} filter={s => {
+          }}>Retry loading</button> : 'Loading your workspace…'}</div> : ctx && <>{current ? <Detail key={current.id} job={current} ctx={ctx} back={() => navigate('Applications')} /> : jobId ? <div className="empty-state">This application could not be found.<button className="text-button" onClick={() => navigate('Applications')}>Back to applications</button></div> : page === 'Dashboard' ? <Dashboard ctx={ctx} calendar={() => navigate('Calendar')} filter={s => {
             navigate('Applications');
             setStage(s);
-          }} /> : page === 'Applications' ? <Applications key={stage} ctx={ctx} initialStage={stage} /> : page === 'Contacts' ? <Contacts ctx={ctx} /> : page === 'Follow-ups' ? <Followups ctx={ctx} /> : <Analytics ctx={ctx} />}</>}</div></main>{form && data && <Modal title={form.type === 'job' ? form.job ? 'Edit application' : 'Add application' : form.type === 'contact' ? form.contact ? 'Edit contact' : 'Add contact' : form.type === 'followup' ? 'Add follow-up' : form.type === 'note' ? 'Add a note' : 'Add activity'} close={() => setForm(null)}><Editor kind={form} data={data} save={save} close={() => setForm(null)} /></Modal>}{confirm && <Modal title="Follow-up completed" close={() => setConfirm(null)}><div className="completion-content"><div className="completion-icon"><Check size={26} /></div><h3>{confirm.next_action}</h3><p>Keep the momentum going with another follow-up 7 days from today.</p></div><div className="form-footer"><button disabled={busy} className="button secondary" onClick={() => setConfirm(null)}>Done</button><button disabled={busy} className="button primary" onClick={async () => {
+          }} /> : page === 'Applications' ? <Applications key={stage} ctx={ctx} initialStage={stage} /> : page === 'Contacts' ? <Contacts ctx={ctx} /> : page === 'Follow-ups' ? <Followups ctx={ctx} /> : page === 'Calendar' ? <Calendar ctx={ctx} /> : <Analytics ctx={ctx} />}</>}</div></main>{form && data && <Modal title={form.type === 'job' ? form.job ? 'Edit application' : 'Add application' : form.type === 'contact' ? form.contact ? 'Edit contact' : 'Add contact' : form.type === 'followup' ? 'Add follow-up' : form.type === 'interview' ? form.interview ? 'Edit appointment' : form.job ? 'Schedule interview' : 'Add appointment' : form.type === 'note' ? 'Add a note' : 'Add activity'} close={() => setForm(null)}>{form.type === 'interview' ? <InterviewForm kind={form} data={data} save={save} close={() => setForm(null)} /> : <Editor kind={form} data={data} save={save} close={() => setForm(null)} />}</Modal>}{confirm && <Modal title="Follow-up completed" close={() => setConfirm(null)}><div className="completion-content"><div className="completion-icon"><Check size={26} /></div><h3>{confirm.next_action}</h3><p>Keep the momentum going with another follow-up 7 days from today.</p></div><div className="form-footer"><button disabled={busy} className="button secondary" onClick={() => setConfirm(null)}>Done</button><button disabled={busy} className="button primary" onClick={async () => {
           setBusy(true);
           try {
             await save('followups', {

@@ -509,3 +509,38 @@ Installation requirements change. Confirm them when helping the learner; do not 
 - [node-gyp installation prerequisites](https://github.com/nodejs/node-gyp#installation): platform build tools when a native component actually needs compilation.
 
 The first response after receiving this guide should introduce the learning process briefly, ask which operating system and tools the learner has, and propose the first small setup step. It should not deliver a wall of generated code.
+
+
+INTERVIEW SCHEDULING AND CALENDAR
+
+Let the user open an application and choose Schedule interview. Also offer this action from the application table’s quick actions and the calendar. Keep multiple appointments per application without overwriting earlier interviews.
+
+Store the interview stage (Phone Screen, Recruiter Screen, Hiring Manager, Technical Interview, Panel / Onsite, Final Interview, or Other), date and start time, duration in minutes, time zone, format (Phone, Video, In person, or Other), and appointment status (Scheduled, Completed, or Cancelled). Include an optional linked contact for that application, interviewer name, email, phone or dial-in number, meeting URL, address, preparation or agenda, and notes. Selecting a saved contact fills its name and email. Support entering contact information without first creating a contact record.
+
+Use the computer’s current time zone for date/time entry and prominently identify that zone. Store each appointment’s exact instant and its scheduling time zone so it remains accurate after restarting or changing the computer’s time zone. Reject invalid calendar dates, nonexistent daylight saving times, unsafe meeting URLs, and contacts linked to a different application.
+
+Show an Interviews & appointments section in the application workspace. Allow editing, rescheduling, cancelling, and marking interviews complete. Preserve completed and cancelled appointments for reference. Record scheduling and changes in the activity timeline without automatically advancing the application’s pipeline stage or distorting funnel analytics.
+
+Add Calendar to the sidebar. Provide a monthly grid with Sunday-first weekday labels, previous/next month controls, a Today button, and an obvious Schedule interview action. Highlight today and the selected date. Show appointment time, company, and interview stage in each event. Clicking an event edits it; clicking anywhere in a day square selects that day, displays its full appointment list, and opens a new appointment form with the date filled in. Default new appointments to the selected date. Keep a selected-day agenda accessible on small screens even if the monthly grid scrolls horizontally. Hide cancelled events by default, with a Show cancelled option.
+
+On the dashboard, show separate Today and Upcoming appointment lists sorted by start time. Include company, job title, interview stage, interviewer/contact information, duration, meeting link, preparation, and notes. Show all of today’s scheduled appointments and the next four future appointments, with a View calendar link for the complete schedule. Exclude completed and cancelled appointments from these dashboard lists. Allow standalone appointments even when the workspace contains no applications.
+
+Add interview data to JSON exports, each application’s CSV data, and full SQLite backups. Upgrade existing databases by adding interview storage without replacing or clearing existing applications. Verify persistence by closing and reopening a temporary database, restoring its backup, and confirming all appointment fields remain. Test rescheduling, cancellation, completion, validation, and dashboard/calendar display.
+
+
+STANDALONE APPOINTMENTS
+
+The calendar’s Add appointment action must default to a standalone appointment. Require an appointment title and date/time, but make the associated application optional. The user can enter contact information, duration, format, location, meeting link, preparation, and notes without choosing a company or creating a placeholder application. Selecting an application changes the form into an interview appointment with an interview stage. Existing application-linked interviews must keep their saved relationships.
+
+Show standalone appointment titles in calendar events, the selected-day agenda, and the dashboard’s Today and Upcoming lists. Support editing, completing, and cancelling them just like interviews. Enable appointment creation even when there are no applications. Preserve standalone appointments in full JSON exports and SQLite backups; the application CSV remains limited to application-associated records.
+
+The monthly calendar must begin on Sunday, followed by Monday through Saturday. Align the actual calendar dates with those headings, including days from the preceding and following months. Verify both the heading order and that the first calendar cell is a Sunday. Upgrade earlier interview databases without losing interview IDs, contact links, notes, or application records.
+
+
+STARTING AUTOMATICALLY AT MACHINE BOOT
+
+Provide a simple opt-in way to run the built application automatically when the computer starts, without requiring an open terminal or a user login. On Linux with systemd, use a service owned by the normal user and enable the system’s user lingering setting so that service can start before login. Explain any administrator permission needed for this setting. Keep a single backend process serving the built interface on local port 3001. Do not start the development server at boot or expose the app to the internet.
+
+Provide an installer that builds the current application, preserves the existing database, disables fictional demo seeding, creates and enables the startup service, and verifies that it is running and serves both its interface and data endpoint. The service should restart after a crash. Explain that a previously running manual development session must be stopped to avoid competing for the same port. The browser can be opened later; starting the background application should not require automatically launching a browser.
+
+Give the beginner clear commands to check status, view logs, rebuild and restart after changes, and disable startup. Keep machine-specific service settings outside the project repository. Verify startup is enabled and, after an actual reboot when possible, confirm the app is available without manually starting it. If a chatbot’s environment cannot write computer startup settings or contact the operating system’s service manager, explain that limitation and prepare a local installer for the user to run, without claiming boot startup is already enabled. Use the appropriate native startup mechanism on macOS or Windows rather than assuming Linux commands work everywhere.
