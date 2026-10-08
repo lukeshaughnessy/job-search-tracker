@@ -1,9 +1,9 @@
 import type { DB } from './db';
 import type { Data, Job, Contact, Followup, Activity, Interview } from '../shared/models';
-import { stages, sources, relationships, interviewStages, priorities } from '../shared/models';
+import { stages, sources, relationships, interviewStages } from '../shared/models';
 import { addDays, today } from '../src/utils/dates';
 export class ValidationError extends Error {}
-const jobFields = ['company', 'title', 'url', 'location', 'work_mode', 'compensation', 'found_date', 'applied_date', 'source', 'referral', 'description', 'notes', 'priority', 'stage'];
+const jobFields = ['company', 'title', 'url', 'location', 'work_mode', 'compensation', 'found_date', 'applied_date', 'source', 'referral', 'description', 'notes', 'stage'];
 const contactFields = ['job_id', 'name', 'title', 'company', 'email', 'linkedin', 'relationship', 'first_contacted', 'last_contacted', 'notes'];
 const followFields = ['job_id', 'contact_id', 'due_date', 'completed', 'type', 'notes', 'next_action'];
 function validate(input: Record<string, any>) {
@@ -28,7 +28,6 @@ function validate(input: Record<string, any>) {
   if (input.source && !sources.includes(input.source)) throw new ValidationError('Invalid source.');
   if (input.relationship && !relationships.includes(input.relationship)) throw new ValidationError('Invalid relationship.');
   if (input.work_mode && !['Remote', 'Hybrid', 'On-site'].includes(input.work_mode)) throw new ValidationError('Invalid work arrangement.');
-  if (input.priority !== undefined && input.priority !== '' && !priorities.includes(input.priority)) throw new ValidationError('Invalid priority.');
 }
 const interviewFields = ['title','job_id','contact_id','stage','starts_at','timezone','duration_minutes','format','status','contact_name','contact_email','contact_phone','meeting_url','location','notes','preparation'];
 export function service(db: DB) {

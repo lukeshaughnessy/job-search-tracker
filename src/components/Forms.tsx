@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Data, Job, Contact, Interview } from '../../shared/models';
-import { stages, sources, relationships, priorities } from '../../shared/models';
+import { stages, sources, relationships } from '../../shared/models';
 import { today, addDays } from '../utils/dates';
 import { Field } from './UI';
 export type FormKind = { type: 'interview'; job?: Job; interview?: Interview; date?: string } | {
@@ -44,7 +44,6 @@ export function Editor({
     referral: '',
     description: '',
     notes: '',
-    priority: 'Medium',
     stage: 'Interested'
   } : kind.type === 'contact' ? kind.contact || {
     job_id: kind.job?.id || data.jobs[0]?.id,
@@ -113,7 +112,7 @@ export function Editor({
     }
   }}>
  <div className="form-grid">
- {kind.type === 'job' && <>{input('company', 'Company', 'text', false, true)}{input('title', 'Job title', 'text', false, true)}{input('url', 'Job posting URL', 'url', true)}{input('location', 'Location')}{select('work_mode', 'Work arrangement', ['Remote', 'Hybrid', 'On-site'])}{input('compensation', 'Compensation range')}{select('stage', 'Pipeline stage', [...stages])}{input('found_date', 'Date found', 'date')}{input('applied_date', 'Date applied', 'date')}{select('source', 'Source', sources)}{input('referral', 'Referral / contact source')}{select('priority', 'Priority', ['', ...priorities])}{area('notes', 'Notes')}{area('description', 'Job description')}<p className="form-hint wide">An application date automatically adds a follow-up 7 days later.</p></>}
+ {kind.type === 'job' && <>{input('company', 'Company', 'text', false, true)}{input('title', 'Job title', 'text', false, true)}{input('url', 'Job posting URL', 'url', true)}{input('location', 'Location')}{select('work_mode', 'Work arrangement', ['Remote', 'Hybrid', 'On-site'])}{input('compensation', 'Compensation range')}{select('stage', 'Pipeline stage', [...stages])}{input('found_date', 'Date found', 'date')}{input('applied_date', 'Date applied', 'date')}{select('source', 'Source', sources)}{input('referral', 'Referral / contact source')}{area('notes', 'Notes')}{area('description', 'Job description')}<p className="form-hint wide">An application date automatically adds a follow-up 7 days later.</p></>}
  {(kind.type === 'contact' || kind.type === 'followup') && <Field label="Associated opportunity" wide><select required value={value.job_id} onChange={e => setValue({
           ...value,
           job_id: Number(e.target.value),

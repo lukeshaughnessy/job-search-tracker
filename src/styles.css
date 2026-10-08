@@ -546,7 +546,7 @@ small {
 }
 .dashboard-bottom {
   display: grid;
-  grid-template-columns: minmax(0,1.9fr) minmax(260px,1fr);
+  grid-template-columns: 1fr;
   gap: 20px
 }
 .count-pill {
@@ -617,31 +617,6 @@ small {
   display: none;
   font-size: 10px;
   color: var(--muted)
-}
-.focus-item {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 18px 23px;
-  gap: 13px;
-  border-top: 1px solid var(--tone-eef1ee);
-  text-align: left
-}
-.focus-item>div {
-  flex: 1;
-  min-width: 0
-}
-.focus-item>svg {
-  color: var(--tone-88988e)
-}
-.focus-item strong {
-  font-size: 11px
-}
-.focus-item p {
-  font-size: 10px;
-  line-height: 1.6;
-  color: var(--tone-919b93);
-  margin: 5px 0 8px
 }
 .company-mark {
   width: 33px;
@@ -1387,7 +1362,7 @@ input[type=checkbox] {
 .dark .action-title,.dark .company-cell,.dark .role-cell,.dark .detail-facts strong {
   color: var(--tone-b7cbbb)
 }
-.dark .action-row,.dark .focus-item,.dark td {
+.dark .action-row,.dark td {
   border-color: var(--border)
 }
 .dark input,.dark select,.dark textarea {
@@ -1403,7 +1378,7 @@ input[type=checkbox] {
 .dark .brand-symbol {
   background: var(--tone-367054)
 }
-.dark .focus-card p,.dark .action-content p {
+.dark .action-content p {
   color: var(--tone-91a497)
 }
 @media(min-width:1600px) {
@@ -1423,7 +1398,7 @@ input[type=checkbox] {
     min-height: 220px
   }
   .dashboard-bottom {
-    grid-template-columns: 2fr 1fr
+    grid-template-columns: 1fr
   }
 }
 @media(max-width:1250px) {
@@ -1450,9 +1425,6 @@ input[type=checkbox] {
   }
   .dashboard-bottom {
     grid-template-columns: 1fr
-  }
-  .focus-card {
-    display: none
   }
   .analytics-metrics {
     grid-template-columns: repeat(3,1fr)
@@ -1763,9 +1735,6 @@ h2 { font-size: 18px; }
 .badge { font-size: 11px; padding: 5px 9px; }
 .badge.red { background: #fff0e9; color: #ad5439; }
 .badge.amber { background: #fff4d9; color: #936e22; }
-.focus-item { padding: 20px 25px; }
-.focus-item strong { font-size: 13px; }
-.focus-item p { font-size: 12px; color: var(--tone-78867d); }
 .company-mark { width: 38px; height: 38px; font-family: inherit; }
 .count-pill { font-size: 11px; }
 .search-input input, .filters select, .filters input[type=date], .filters label { font-size: 12px; }

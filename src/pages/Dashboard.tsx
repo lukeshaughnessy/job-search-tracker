@@ -1,9 +1,9 @@
-import { ArrowUpRight, ArrowRight, Plus, Briefcase, Send, CalendarClock, TriangleAlert, Trophy, UserRound, XCircle, ChevronRight, TrendingUp } from 'lucide-react';
+import { ArrowRight, Plus, Briefcase, Send, CalendarClock, TriangleAlert, Trophy, UserRound, XCircle, ChevronRight } from 'lucide-react';
 import { InterviewList } from '../components/InterviewList';
 import { interviewDate, localTimezone, sortedInterviews } from '../utils/interviews';
 import { state } from '../../shared/models';
 import { today, addDays } from '../utils/dates';
-import { type Context, FollowupList, CompanyMark } from './shared';
+import { type Context, FollowupList } from './shared';
 export function Dashboard({
   ctx,
   filter,
@@ -68,8 +68,5 @@ export function Dashboard({
           }} /></button>)}</div>{jobs.some(j => j.stage === 'Contacted') && <button className="text-button contacted-link" onClick={() => filter('Contacted')}>{jobs.filter(j => j.stage === 'Contacted').length} contacted opportunities <ChevronRight size={13} /></button>}</section>
  <div className="dashboard-bottom"><section className="card"><div className="section-heading"><div><h2>Follow-ups & Next Actions <span className="count-pill">{pending.length}</span></h2><p>Upcoming actions, ordered by due date</p></div><button className="text-button" onClick={() => ctx.edit({
             type: 'followup'
-          })}><Plus size={16} /> Add action</button></div><FollowupList items={pending.slice(0, 5)} ctx={ctx} /></section><section className="card focus-card"><div className="section-heading"><div><h2>Worth your attention</h2><p>Your high-priority opportunities</p></div><StarIcon /></div>{jobs.filter(j => state(j.stage) === 'Active' && j.priority === 'High').slice(0, 3).map(j => <button className="focus-item" key={j.id} onClick={() => ctx.openJob(j)}><CompanyMark job={j} /><div><strong>{j.company}</strong><p>{j.title}</p></div><ArrowUpRight size={15} /></button>)}</section></div></>;
-}
-function StarIcon() {
-  return <TrendingUp size={19} className="muted" />;
+          })}><Plus size={16} /> Add action</button></div><FollowupList items={pending.slice(0, 5)} ctx={ctx} /></section></div></>;
 }
