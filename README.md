@@ -67,7 +67,7 @@ Tests exercise duplicate protection, stage history, automatic follow-ups, contac
 
 ## Data and backups
 
-Data lives in `data/tracker.sqlite`, created on first start. New workspaces start empty. To opt into fictional demo opportunities in a separate database, run `SEED_DATA=true DB_PATH=data/demo.sqlite npm run dev`; seeding only occurs when its jobs table is empty. Application and follow-up dates are interpreted as local calendar dates. Interview timestamps retain their exact instant and display in your computer’s current time zone. Existing database records survive development restarts and builds. On startup, legacy Fit and Interest columns are removed while applications and related records are retained. The database is excluded from Git.
+Data lives in `data/tracker.sqlite`, created on first start. New workspaces start empty. To opt into fictional demo opportunities in a separate database, run `SEED_DATA=true DB_PATH=data/demo.sqlite npm run dev`; seeding only occurs when its jobs table is empty. Application and follow-up dates are interpreted as local calendar dates. Interview timestamps retain their exact instant and display in your computer’s current time zone. Existing database records survive development restarts and builds. On startup, legacy Fit, Interest, and priority columns are removed while applications and related records are retained. The database is excluded from Git.
 
 To start an empty workspace, use a separate file with seeding disabled:
 
@@ -81,7 +81,7 @@ To restore a SQLite backup, stop the app, retain a copy of your current database
 
 ## Using the workspace
 
-- Add or edit applications with priority, source, compensation, preserved descriptions, and notes.
+- Add or edit applications with source, compensation, preserved descriptions, and notes.
 - Click pipeline stages to filter applications. Search company, role, contact names/contact notes, and application notes. Table column headers sort; Filters expands company, location, and application date range controls.
 - Open an application and choose **Schedule interview**, or use its table row menu. Record the interview stage, date and start time, duration, phone/video/in-person format, contact information, meeting link or address, preparation, and notes. Edit to reschedule or cancel; mark appointments complete directly in the list. Scheduling does not change the application pipeline stage.
 - **Calendar → Add appointment** defaults to a standalone appointment: enter a title, date/time, and any contact, location, meeting, or note details without selecting a company. You can optionally select an application to schedule an interview instead. Standalone appointments appear on the dashboard and are included in JSON exports and SQLite backups; the application CSV contains only application-associated records.

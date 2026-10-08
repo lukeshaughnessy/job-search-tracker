@@ -5,76 +5,78 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { priorities } from '../shared/models';
 import { openDatabase } from './db';
 import { service } from './service';
 import { Editor } from '../src/components/Forms';
 import { Applications } from '../src/pages/Applications';
+import { Detail } from '../src/pages/Detail';
+import { Dashboard } from '../src/pages/Dashboard';
+import { seed } from './seed';
 import type { Context } from '../src/pages/shared';
 
-test('each priority can be created, edited, and retained after reopening SQLite', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'tracker-priority-'));
+test('removing legacy priorities preserves applications and every related record across restarts and backup', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'tracker-remove-priority-'));
   const path = join(dir, 'tracker.sqlite');
   let db = openDatabase(path);
   try {
+    db.exec("ALTER TABLE jobs ADD COLUMN priority TEXT DEFAULT 'Medium'");
     const s = service(db);
-    for (const priority of priorities) {
-      const id = s.createJob({ company: priority + ' Co', title: 'Manager', priority });
-      assert.equal(s.data().jobs.find(j => j.id === id)?.priority, priority);
-      for (const next of priorities) {
-        s.updateJob(id, { priority: next });
-        assert.equal(s.data().jobs.find(j => j.id === id)?.priority, next);
-      }
-      s.updateJob(id, { priority });
+    for (const priority of ['High', 'Medium', 'Low', '']) {
+      const job = s.createJob({ company: (priority || 'Legacy') + ' Co', title: 'Manager', stage: 'Applied', notes: 'Keep notes' });
+      db.prepare('UPDATE jobs SET priority=? WHERE id=?').run(priority, job);
+      const contact = s.saveContact({ job_id: job, name: 'Recruiter' });
+      s.saveInterview({ job_id: job, contact_id: contact, stage: 'Hiring Manager', starts_at: '2026-10-08T16:00:00.000Z', timezone: 'America/Denver', duration_minutes: 60, format: 'Video', status: 'Scheduled', notes: 'Keep interview notes' });
+      s.addActivity({ job_id: job, contact_id: contact, text: 'Keep history' });
     }
-    const before = s.data();
+    const expected = s.data();
+    expected.jobs = expected.jobs.map(job => {
+      const record = { ...job } as unknown as Record<string, unknown>;
+      delete record.priority;
+      return record as unknown as typeof job;
+    });
     db.close();
     db = openDatabase(path);
-    assert.deepEqual(service(db).data(), before);
+    assert.deepEqual(service(db).data(), expected);
+    assert.deepEqual(db.pragma('foreign_key_check'), []);
+    const columns = db.prepare('PRAGMA table_info(jobs)').all() as { name: string }[];
+    assert.ok(!columns.some(column => column.name === 'priority'));
+    await db.backup(join(dir, 'backup.sqlite'));
+    db.close();
+    for (const file of [path, join(dir, 'backup.sqlite')]) {
+      db = openDatabase(file);
+      assert.deepEqual(service(db).data(), expected);
+      db.close();
+    }
+    db = openDatabase(path);
+    const migrated = service(db);
+    migrated.updateJob(expected.jobs[0].id, { notes: 'Still editable', priority: 'High' });
+    const id = migrated.createJob({ company: 'New Co', title: 'Director', priority: 'Low' });
+    assert.ok(migrated.data().jobs.some(job => job.id === id));
+    assert.equal(migrated.data().jobs.find(job => job.id === expected.jobs[0].id)?.notes, 'Still editable');
+    for (const job of migrated.data().jobs) assert.ok(!('priority' in job));
+    assert.doesNotMatch(JSON.stringify(migrated.data()), /"priority":/);
   } finally { db.close(); rmSync(dir, { recursive: true, force: true }); }
 });
 
-test('default and legacy empty priorities work; invalid priorities cannot change saved records', () => {
+test('forms, application list, details, and dashboard no longer display priority', () => {
   const db = openDatabase(':memory:');
   try {
-    const s = service(db);
-    const id = s.createJob({ company: 'Default Co', title: 'Manager', stage: 'Applied' });
-    assert.equal(s.data().jobs[0].priority, 'Medium');
-    const legacy = s.createJob({ company: 'Legacy Co', title: 'Director', priority: '' });
-    s.updateJob(legacy, { notes: 'Existing application still works' });
-    assert.equal(s.data().jobs[0].priority, '');
-    const before = s.data();
-    for (const priority of ['Urgent', 'high', null, false, 0, [], {}]) {
-      assert.throws(() => s.createJob({ company: 'Invalid Co', title: 'Manager', priority }));
-      assert.throws(() => s.updateJob(id, { priority, stage: 'Offer' }));
-      assert.deepEqual(s.data(), before);
-    }
-    s.updateJob(legacy, { priority: 'High' });
-    assert.equal(s.data().jobs.find(j => j.id === legacy)?.priority, 'High');
-    assert.equal(s.data().followups.length, 1);
-  } finally { db.close(); }
-});
-
-test('create/edit forms expose all priorities and application list displays saved priorities', () => {
-  const db = openDatabase(':memory:');
-  try {
-    const s = service(db);
-    for (const priority of [...priorities, '']) s.createJob({ company: (priority || 'Legacy') + ' Co', title: 'Manager', priority });
-    const data = s.data();
-    const renderForm = (job?: typeof data.jobs[number]) => renderToStaticMarkup(createElement(Editor, {
-      kind: { type: 'job', job }, data, save: async () => {}, close: () => {}
-    })).match(/<span>Priority<\/span><select>(.*?)<\/select>/)?.[1];
-    for (const job of [undefined, ...data.jobs]) {
-      const field = renderForm(job);
-      assert.ok(field);
-      for (const priority of priorities) assert.ok(field.includes(`value="${priority}"`));
-      const selected = job ? job.priority : 'Medium';
-      assert.ok(field.includes(`value="${selected}" selected=""`));
-    }
+    seed(db);
+    const data = service(db).data();
     const ctx: Context = { data, openJob: () => {}, edit: () => {}, save: async () => {}, complete: () => {} };
-    const list = renderToStaticMarkup(createElement(Applications, { ctx, initialStage: '' }));
-    for (const priority of priorities) assert.ok(list.includes(`<small>${priority} priority</small>`));
-    assert.match(list, /<small>No priority<\/small>/);
-    assert.match(list, /Legacy Co/);
+    const job = data.jobs[0];
+    const surfaces = [
+      createElement(Editor, { kind: { type: 'job' }, data, save: async () => {}, close: () => {} }),
+      createElement(Editor, { kind: { type: 'job', job }, data, save: async () => {}, close: () => {} }),
+      createElement(Applications, { ctx, initialStage: '' }),
+      createElement(Detail, { ctx, job, back: () => {} }),
+      createElement(Dashboard, { ctx, filter: () => {}, calendar: () => {} })
+    ];
+    for (const surface of surfaces) assert.doesNotMatch(renderToStaticMarkup(surface), /priority|Worth your attention/i);
+    const dashboard = renderToStaticMarkup(surfaces[4]);
+    assert.match(dashboard, /Follow-ups &amp; Next Actions/);
+    assert.match(dashboard, /Your pipeline/);
+    assert.match(dashboard, /Interviews &amp; appointments/);
+    for (const job of data.jobs) assert.ok(!('priority' in job));
   } finally { db.close(); }
 });

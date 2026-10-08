@@ -233,7 +233,6 @@ Each opportunity has an automatically assigned identifier and these fields:
 - Complete saved job description, separate from notes.
 - Large free-text notes for interviews, research, and networking.
 - Fit rating and interest rating, each a whole number from 1 to 5.
-- Optional priority: High, Medium, or Low.
 - Current pipeline stage and creation information.
 
 Fit means how well the requirements match the user’s experience. Interest means how much they want the opportunity. These must be separate so a high-fit role can still have low interest, or the reverse.

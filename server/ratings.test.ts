@@ -20,7 +20,7 @@ test('legacy ratings migrate without losing applications or related records', ()
   try {
     db.exec('ALTER TABLE jobs ADD COLUMN fit INTEGER DEFAULT 3 CHECK(fit BETWEEN 1 AND 5); ALTER TABLE jobs ADD COLUMN interest INTEGER DEFAULT 3 CHECK(interest BETWEEN 1 AND 5)');
     const s = service(db);
-    const id = s.createJob({ company: 'Legacy Co', title: 'Manager', stage: 'Applied', priority: 'High', notes: 'Keep this' });
+    const id = s.createJob({ company: 'Legacy Co', title: 'Manager', stage: 'Applied', notes: 'Keep this' });
     db.prepare('UPDATE jobs SET fit=5, interest=4 WHERE id=?').run(id);
     s.saveContact({ job_id: id, name: 'Recruiter' });
     const before = s.data();
@@ -54,15 +54,15 @@ test('legacy ratings migrate without losing applications or related records', ()
   }
 });
 
-test('application surfaces omit ratings and dashboard uses high priority', () => {
+test('application surfaces omit ratings', () => {
   const db = openDatabase(':memory:');
   try {
     const s = service(db);
-    s.createJob({ company: 'High Priority Co', title: 'Manager', priority: 'High' });
-    s.createJob({ company: 'Low Priority Co', title: 'Director', priority: 'Low' });
+    s.createJob({ company: 'Application Co', title: 'Manager' });
+    s.createJob({ company: 'Other Co', title: 'Director' });
     const data = s.data();
     const ctx: Context = { data, openJob: () => {}, edit: () => {}, save: async () => {}, complete: () => {} };
-    const job = data.jobs.find(j => j.priority === 'High')!;
+    const job = data.jobs[0];
     const surfaces = [
       createElement(Applications, { ctx, initialStage: '' }),
       createElement(Detail, { ctx, job, back: () => {} }),
@@ -73,10 +73,6 @@ test('application surfaces omit ratings and dashboard uses high priority', () =>
     for (const surface of surfaces) {
       const html = renderToStaticMarkup(surface);
       assert.doesNotMatch(html, /\bFit\b|\bInterest\b|Any fit|out of 5|class="rating"/);
-      assert.match(html, /priority|Priority/);
     }
-    const dashboard = renderToStaticMarkup(surfaces[2]);
-    assert.match(dashboard, /High Priority Co/);
-    assert.doesNotMatch(dashboard, /Low Priority Co/);
   } finally { db.close(); }
 });
