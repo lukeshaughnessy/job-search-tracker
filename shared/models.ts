@@ -1,6 +1,8 @@
 export const stages = (['Interested', 'Applied', 'Contacted', 'Recruiter Screen', 'Hiring Manager', 'Technical Interview', 'Panel / Onsite', 'Final Interview', 'Offer', 'Rejected', 'Withdrawn'] as const);
 export const sources = ['LinkedIn', 'Company website', 'Recruiter', 'Referral', 'Networking', 'Other'];
 export const relationships = ['Recruiter', 'Hiring Manager', 'Referral', 'Employee', 'Executive', 'Other'];
+export const priorities = ['High', 'Medium', 'Low'] as const;
+export type Priority = typeof priorities[number];
 export type Stage = typeof stages[number];
 export interface Job {
   id: number;
@@ -16,7 +18,7 @@ export interface Job {
   referral: string;
   description: string;
   notes: string;
-  priority: string;
+  priority: Priority | '';
   stage: Stage;
   created_at: string;
 }
